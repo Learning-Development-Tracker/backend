@@ -1,0 +1,24 @@
+spring:
+    datasource:
+        url: jdbc:sqlserver://hrisdbserver5.database.windows.net:1433;database=hrisdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+        username: hrisadmin
+        password: 8nxlCAVW
+    jpa:
+        show-sql: true
+        hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: lpshris1@gmail.com
+      password: xcmhecferfilhhmi
+      properties:
+        mail: 
+         smtp: 
+            auth: true
+            starttls:
+              enable: true
+server: 
+  port: 80
