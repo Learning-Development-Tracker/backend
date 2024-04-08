@@ -1,8 +1,8 @@
 spring:
     datasource:
-        url: jdbc:sqlserver://hrisdbserver5.database.windows.net:1433;database=hrisdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-        username: hrisadmin
-        password: 8nxlCAVW
+        url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+        username: ltddbadmin
+        password: ltdadmin@1
     jpa:
         show-sql: true
         hibernate:
