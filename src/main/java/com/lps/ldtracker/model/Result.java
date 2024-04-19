@@ -9,6 +9,6 @@ public class Result {
 	
 	private String status;
 	private String message;
-	private List<HrisError> errors;
+	private List<LdTrackerError> errors;
 	private Object data;
 }

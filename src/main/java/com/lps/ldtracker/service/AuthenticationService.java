@@ -1,6 +1,6 @@
 package com.lps.ldtracker.service;
 
-import com.lps.ldtracker.constants.HrisConstants;
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LoginRequest;
@@ -30,12 +30,12 @@ public class AuthenticationService {
 		String username = loginRequest.getUsername();
 	    String password = loginRequest.getPassword();
 	    
-	    if (username.length() < HrisConstants.MIN_USERNAME_LENGTH || username.length() > HrisConstants.MAX_USERNAME_LENGTH) {
-	        throw new AuthenticationFailedException("Username length must be between " + HrisConstants.MIN_USERNAME_LENGTH + " and " + HrisConstants.MAX_USERNAME_LENGTH + " characters");
+	    if (username.length() < LdTrackerConstants.MIN_USERNAME_LENGTH || username.length() > LdTrackerConstants.MAX_USERNAME_LENGTH) {
+	        throw new AuthenticationFailedException("Username length must be between " + LdTrackerConstants.MIN_USERNAME_LENGTH + " and " + LdTrackerConstants.MAX_USERNAME_LENGTH + " characters");
 	    }
 
-	    if (password.length() < HrisConstants.MIN_PASSWORD_LENGTH || password.length() > HrisConstants.MAX_PASSWORD_LENGTH) {
-	        throw new AuthenticationFailedException("Password length must be between " + HrisConstants.MIN_PASSWORD_LENGTH + " and " + HrisConstants.MAX_PASSWORD_LENGTH + " characters");
+	    if (password.length() < LdTrackerConstants.MIN_PASSWORD_LENGTH || password.length() > LdTrackerConstants.MAX_PASSWORD_LENGTH) {
+	        throw new AuthenticationFailedException("Password length must be between " + LdTrackerConstants.MIN_PASSWORD_LENGTH + " and " + LdTrackerConstants.MAX_PASSWORD_LENGTH + " characters");
 	    }
 		
 		var user = userRepository.findByUsername(username)

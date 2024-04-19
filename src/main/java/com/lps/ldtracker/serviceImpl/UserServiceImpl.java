@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lps.ldtracker.constants.HrisConstants;
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.model.AuthenticationResponse;
-import com.lps.ldtracker.model.HrisError;
+import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UserT;
@@ -61,19 +61,19 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	public Result registerUser(RegistrationRequest request) { 
 		Result result = new Result();
 		Optional<UserT> user = this.findByemail(request.email());
-		List<HrisError> errors = new ArrayList<>();
+		List<LdTrackerError> errors = new ArrayList<>();
 		try {
 			
 			this.validateRegisterInputs(request, errors);
 			
 			if(!errors.isEmpty()) {
-				    result = resultService.setResult("200", HrisConstants.SUCCESS, errors, null);
+				    result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
 		            return result;
 			}
 			
 			if(user.isPresent()) {
-				result.setMessage(HrisConstants.USER_ALREADY_EXISTS);
-				result.setStatus(HrisConstants.ERROR);
+				result.setMessage(LdTrackerConstants.USER_ALREADY_EXISTS);
+				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			} else {
 				String otp = generateOtp();
@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 				newUser.setRole(RoleSecurity.EMPLOYEE);
 
 				result.setData(userBuilder);
-				result.setMessage(HrisConstants.SUCCESS);
-				result.setStatus(HrisConstants.SUCCESS);
+				result.setMessage(LdTrackerConstants.SUCCESS);
+				result.setStatus(LdTrackerConstants.SUCCESS);
 				
 				return result;
 			} 
@@ -152,8 +152,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	}
 	
 	private void sendVerificationEmail(String email, String otp) {
-		String subject = HrisConstants.SUBJECT;
-		String body = HrisConstants.YOUR_OTP + otp;
+		String subject = LdTrackerConstants.SUBJECT;
+		String body = LdTrackerConstants.YOUR_OTP + otp;
 		emailService.sendEmail(email, subject, body);
 	}
 
@@ -181,42 +181,42 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 					.build();
 			userRepository.save(userBuilder);
 			result.setData(true);
-			result.setMessage(HrisConstants.SUCCESS);
-			result.setStatus(HrisConstants.SUCCESS);
+			result.setMessage(LdTrackerConstants.SUCCESS);
+			result.setStatus(LdTrackerConstants.SUCCESS);
 			return result;
 		} else{
 			result.setData(false);
-			result.setMessage(HrisConstants.ERROR);
-			result.setStatus(HrisConstants.ERROR);
+			result.setMessage(LdTrackerConstants.ERROR);
+			result.setStatus(LdTrackerConstants.ERROR);
 		}
 		return result;
 	}
 
-	private void validateRegisterInputs(RegistrationRequest param, List<HrisError> errors) {
+	private void validateRegisterInputs(RegistrationRequest param, List<LdTrackerError> errors) {
 	    for (ValidationParamCollection<String, String, String> tuple : this.getValidationParams(param)) {
 	        errorService.validateEmptyInputs(tuple.getFirst(), tuple.getSecond(), tuple.getThird(), errors);
 	    }
 	    // Additional specific validations
-	    errorService.validateEmail(param.email(), "Email", HrisConstants.INVALID_EMAIL, errors);
+	    errorService.validateEmail(param.email(), "Email", LdTrackerConstants.INVALID_EMAIL, errors);
 	    if(null != param.phoneNo() && !param.phoneNo().isEmpty()) {
-	    	errorService.validateCharLength(param.phoneNo(), "Phone number", HrisConstants.INVALID_PHONE_NO, 11, errors);
-		    errorService.validatePhoneNumber(param.phoneNo(), "Phone number", HrisConstants.INVALID_PHONE_NO, errors);
+	    	errorService.validateCharLength(param.phoneNo(), "Phone number", LdTrackerConstants.INVALID_PHONE_NO, 11, errors);
+		    errorService.validatePhoneNumber(param.phoneNo(), "Phone number", LdTrackerConstants.INVALID_PHONE_NO, errors);
 	    }
 	    
 	}
 	
 	private List<ValidationParamCollection<String, String, String>> getValidationParams(RegistrationRequest param) {
 		List<ValidationParamCollection<String, String, String>> validationTuples = new ArrayList<>();
-		validationTuples.add(new ValidationParamCollection<>(param.address(), "Address", HrisConstants.INVALID_ADDRESS));
-	    validationTuples.add(new ValidationParamCollection<>(param.email(), "Email", HrisConstants.INVALID_EMAIL));
-	    validationTuples.add(new ValidationParamCollection<>(param.username(), "User Name", HrisConstants.INVALID_USERNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.password(), "Password", HrisConstants.INVALID_PASSWORD));
-	    validationTuples.add(new ValidationParamCollection<>(param.firstName(), "First Name", HrisConstants.INVALID_FIRSTNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.lastName(), "Last Name", HrisConstants.INVALID_LASTNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.phoneNo(), "Phone number", HrisConstants.INVALID_PHONE_NO));
-	    validationTuples.add(new ValidationParamCollection<>(param.position(), "Position", HrisConstants.INVALID_POSITION));
-	    validationTuples.add(new ValidationParamCollection<>(param.positionCode(), "Position Code", HrisConstants.INVALID_POSITION_CODE));
-	    validationTuples.add(new ValidationParamCollection<>(String.valueOf(param.role()), "Role", HrisConstants.INVALID_ROLE));
+		validationTuples.add(new ValidationParamCollection<>(param.address(), "Address", LdTrackerConstants.INVALID_ADDRESS));
+	    validationTuples.add(new ValidationParamCollection<>(param.email(), "Email", LdTrackerConstants.INVALID_EMAIL));
+	    validationTuples.add(new ValidationParamCollection<>(param.username(), "User Name", LdTrackerConstants.INVALID_USERNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.password(), "Password", LdTrackerConstants.INVALID_PASSWORD));
+	    validationTuples.add(new ValidationParamCollection<>(param.firstName(), "First Name", LdTrackerConstants.INVALID_FIRSTNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.lastName(), "Last Name", LdTrackerConstants.INVALID_LASTNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.phoneNo(), "Phone number", LdTrackerConstants.INVALID_PHONE_NO));
+	    validationTuples.add(new ValidationParamCollection<>(param.position(), "Position", LdTrackerConstants.INVALID_POSITION));
+	    validationTuples.add(new ValidationParamCollection<>(param.positionCode(), "Position Code", LdTrackerConstants.INVALID_POSITION_CODE));
+	    validationTuples.add(new ValidationParamCollection<>(String.valueOf(param.role()), "Role", LdTrackerConstants.INVALID_ROLE));
 
 		return validationTuples;
 	}
