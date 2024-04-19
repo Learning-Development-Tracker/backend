@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class HrisError {
+public class LdTrackerError {
 	private String code;
 	private String message;
 	private LocalDateTime timestamp;
 	
-	public HrisError (String code, String message) {
+	public LdTrackerError (String code, String message) {
 		this.code = code;
 		this.message = message;
 		this.timestamp = LocalDateTime.now();

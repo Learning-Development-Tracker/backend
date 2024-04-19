@@ -1,6 +1,6 @@
 package com.lps.ldtracker.constants;
 
-public class HrisConstants {
+public class LdTrackerConstants {
 	
 	//Hris Errors
 	public static final String MISSING_PARAMETERS = "MISSING_PARAMETERS";

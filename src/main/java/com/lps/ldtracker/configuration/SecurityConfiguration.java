@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -40,13 +41,18 @@ public class SecurityConfiguration {
 		"/v1/api-docs",
 		"/api/health",
 		"/api/v1/authentication/**",
-		"/api/v1/forgot-password/**"
+		"/api/v1/forgot-password/**",
+//		"/h2-console/**"
     };
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 			.csrf(AbstractHttpConfigurer::disable)
+			.headers(httpSecurityHeadersConfigurer -> {
+			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+			    httpSecurityHeadersConfigurer.frameOptions().sameOrigin();
+			}) 
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)
 				.permitAll()
@@ -68,7 +74,6 @@ public class SecurityConfiguration {
 			.sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
 			.authenticationProvider(authenticationProvider)
 			.addFilterBefore(jwtAuthenticationFilterConfiguration, UsernamePasswordAuthenticationFilter.class);
-		
 		return httpSecurity.build();
 	}
 }

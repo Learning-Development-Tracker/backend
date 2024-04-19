@@ -16,9 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lps.ldtracker.constants.HrisConstants;
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.model.ForgotPasswordRequest;
-import com.lps.ldtracker.model.HrisError;
+import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.OTP;
 import com.lps.ldtracker.model.OTPVerificationRequest;
 import com.lps.ldtracker.model.Result;
@@ -65,10 +65,10 @@ public class UserForgotPasswordImpl implements UserForgotPasswordService{
 	}
 	
 	private Result setErrorResult(Result result, String message, Boolean data, String errCode, String errMsg) {
-		HrisError error = new HrisError(HrisConstants.ERROR_OCCURED, errCode);
-		List<HrisError> errorList = new ArrayList<>();
+		LdTrackerError error = new LdTrackerError(LdTrackerConstants.ERROR_OCCURED, errCode);
+		List<LdTrackerError> errorList = new ArrayList<>();
 		errorList.add(error);
-	    result.setMessage(HrisConstants.ERROR);
+	    result.setMessage(LdTrackerConstants.ERROR);
 	    result.setStatus(message);
 	    result.setData(data);
 	    result.setErrors(errorList);
@@ -77,7 +77,7 @@ public class UserForgotPasswordImpl implements UserForgotPasswordService{
 	}
 
 	private Result setSuccessResult(Result result, String message, Boolean data) {
-	    result.setMessage(HrisConstants.SUCCESS);
+	    result.setMessage(LdTrackerConstants.SUCCESS);
 	    result.setStatus(message);
 	    result.setData(data);
 	    return result;
@@ -90,19 +90,19 @@ public class UserForgotPasswordImpl implements UserForgotPasswordService{
 
 	    try {
 	        if (!user.isPresent()) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.USER_DOES_NOT_EXISTS, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.USER_DOES_NOT_EXISTS, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        OTP newOtp = generateAndSaveOTP(request.email());
 	        sendOTPEmail(request.email(), newOtp.getOtp());
 
-	        return setSuccessResult(result, HrisConstants.SUCCESS, true);
+	        return setSuccessResult(result, LdTrackerConstants.SUCCESS, true);
 	    } catch (MailException mailException) {
 	    	mailException.printStackTrace();
-	        return setErrorResult(result, statusCode, false,  HrisConstants.AUTH_FAILED, HrisConstants.ERROR_OCCURED);
+	        return setErrorResult(result, statusCode, false,  LdTrackerConstants.AUTH_FAILED, LdTrackerConstants.ERROR_OCCURED);
 	    } catch (Exception e) {
 	    	e.printStackTrace();
-	        return setErrorResult(result, statusCode, false, e.getMessage(), HrisConstants.ERROR_OCCURED);
+	        return setErrorResult(result, statusCode, false, e.getMessage(), LdTrackerConstants.ERROR_OCCURED);
 	    }
 	}
 
@@ -138,34 +138,34 @@ public class UserForgotPasswordImpl implements UserForgotPasswordService{
 
 	    try {
 	        if (this.isEmailOrOtpMissing(request)) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.EMPTY_FIELD, HrisConstants.MISSING_PARAMETERS);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.EMPTY_FIELD, LdTrackerConstants.MISSING_PARAMETERS);
 	        }
 
 	        if (this.isEmailOrOtpEmpty(request)) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.EMPTY_FIELD, HrisConstants.MISSING_PARAMETERS);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.EMPTY_FIELD, LdTrackerConstants.MISSING_PARAMETERS);
 	        }
 
 	        if (!otp.isPresent()) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.YOU_HAVE_NOT_SENT_OTP, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.YOU_HAVE_NOT_SENT_OTP, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        if (this.isExpiredOtp(otp.get(), request.otp())) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.EXPIRED_OTP, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.EXPIRED_OTP, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        if (!this.isValidOtp(otp.get(), request.otp())) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.INVALID_OTP, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.INVALID_OTP, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        OTP newOtp = otp.get();
 	        newOtp.setIsValid(1);
 	        otpRepository.save(newOtp);
-	        return this.setSuccessResult(result, HrisConstants.SUCCESS, true);
+	        return this.setSuccessResult(result, LdTrackerConstants.SUCCESS, true);
 
 	    } catch (RuntimeException e) {
 	        e.printStackTrace();
 	        logger.debug("ERROR verifyOtp: {} ", e.getMessage());
-	        return this.setErrorResult(result, statusCode, false, e.getMessage(), HrisConstants.ERROR_OCCURED);
+	        return this.setErrorResult(result, statusCode, false, e.getMessage(), LdTrackerConstants.ERROR_OCCURED);
 	    }
 	}
 
@@ -196,38 +196,38 @@ public class UserForgotPasswordImpl implements UserForgotPasswordService{
 	        Optional<OTP> otp = this.findOTPByemail(request.email());
 	        
 	        if (!otp.isPresent()) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.YOU_HAVE_NOT_SENT_OTP, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.YOU_HAVE_NOT_SENT_OTP, LdTrackerConstants.ERROR_OCCURED);
 	        }
 	        
 	        if (this.isEmailOrOtpOrPwMissing(request)) {
-	        	return setErrorResult(result, statusCode, false, HrisConstants.REQ_FIELD_MISSING, HrisConstants.MISSING_PARAMETERS);
+	        	return setErrorResult(result, statusCode, false, LdTrackerConstants.REQ_FIELD_MISSING, LdTrackerConstants.MISSING_PARAMETERS);
 	        }
 	        
 	        if (this.isPasswordInvalid(request.password())) {
-	        	return setErrorResult(result, statusCode, false, HrisConstants.REQ_PASSWORD_LENGTH, HrisConstants.ERROR_OCCURED);
+	        	return setErrorResult(result, statusCode, false, LdTrackerConstants.REQ_PASSWORD_LENGTH, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        if (this.isInvalidOtp(otp.get(), request)) {
-	            return setErrorResult(result, statusCode, false, HrisConstants.INVALID_OTP, HrisConstants.ERROR_OCCURED);
+	            return setErrorResult(result, statusCode, false, LdTrackerConstants.INVALID_OTP, LdTrackerConstants.ERROR_OCCURED);
 	        }
 
 	        user.setPassword(passwordEncoder.encode(request.password()));
 	        userRepository.save(user);
 	        this.deleteOTPByEmail(request.email());
 
-	        return this.setSuccessResult(result, HrisConstants.SUCCESS_PASSWORD_UPDATE, true);
+	        return this.setSuccessResult(result, LdTrackerConstants.SUCCESS_PASSWORD_UPDATE, true);
 	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        logger.error("ERROR : {}", e.getMessage());
-	        return this.setErrorResult(result, statusCode, false, e.getMessage(), HrisConstants.ERROR_OCCURED);
+	        return this.setErrorResult(result, statusCode, false, e.getMessage(), LdTrackerConstants.ERROR_OCCURED);
 	    }
 	}
 	
 	private boolean isPasswordInvalid(String password) {
 	    return password != null && 
-	    		(password.length() < HrisConstants.MIN_PASSWORD_LENGTH || 
-	    				password.length() > HrisConstants.MAX_PASSWORD_LENGTH);
+	    		(password.length() < LdTrackerConstants.MIN_PASSWORD_LENGTH || 
+	    				password.length() > LdTrackerConstants.MAX_PASSWORD_LENGTH);
 	}
 
 	private boolean isInvalidOtp(OTP otp, UpdatePasswordRequest request) {
