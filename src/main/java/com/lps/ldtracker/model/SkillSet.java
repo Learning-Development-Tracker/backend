@@ -28,10 +28,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SkillSet {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skillset")
 	@SequenceGenerator(sequenceName = "skillset_seq", allocationSize = 1, name = "skillset")

@@ -20,8 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SkillDetail {
-
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skilldtl")
 	@SequenceGenerator(sequenceName = "skilldtl_seq", allocationSize = 1, name = "skilldtl")

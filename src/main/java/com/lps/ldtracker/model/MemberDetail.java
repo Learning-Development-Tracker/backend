@@ -23,10 +23,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MemberDetail {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberdtl")
 	@SequenceGenerator(sequenceName = "memberdtl_seq", allocationSize = 1, name = "memberdtl")
