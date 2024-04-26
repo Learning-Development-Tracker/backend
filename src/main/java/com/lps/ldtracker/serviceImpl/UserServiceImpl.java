@@ -99,6 +99,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 			
 				var jwtToken = jwtService.generateToken(userBuilder);
 				
+				logger.info(request.status(), "STATUS");
+				
 				AuthenticationResponse
 					.builder()
 					.token(jwtToken)
@@ -113,6 +115,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 				result.setData(userBuilder);
 				result.setMessage(LdTrackerConstants.SUCCESS);
 				result.setStatus(LdTrackerConstants.SUCCESS);
+				
+				
 				
 				return result;
 			} 

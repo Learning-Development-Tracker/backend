@@ -42,7 +42,8 @@ public class SecurityConfiguration {
 		"/api/health",
 		"/api/v1/authentication/**",
 		"/api/v1/forgot-password/**",
-//		"/h2-console/**"
+		"/api/v1/dashboard/**",
+		"/h2-console/**"
     };
 	
 	@Bean

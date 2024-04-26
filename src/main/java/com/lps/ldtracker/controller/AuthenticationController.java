@@ -2,6 +2,7 @@ package com.lps.ldtracker.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +52,7 @@ public class AuthenticationController {
 				.ok(authenticationService.login(loginRequest));
 		} catch (AuthenticationFailedException authenticationFailedException) {
 			return ResponseEntity
-				.status(HttpStatus.FORBIDDEN)
+				.status(HttpStatus.FORBIDDEN)	
 				.body(authenticationFailedException.getMessage());
 		}
 	}
@@ -83,6 +84,12 @@ public class AuthenticationController {
 		Result result = this.userForgotPasswordService.updatePassword(request);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/addUser")
+	public ResponseEntity<?> addUser() {
+		String result = "OK";
+		return new ResponseEntity<>(result, HttpStatus.OK); 
 	}
 	
 }
