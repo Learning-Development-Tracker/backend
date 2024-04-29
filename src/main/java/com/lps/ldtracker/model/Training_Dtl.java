@@ -40,6 +40,7 @@ public class Training_Dtl {
 	@NaturalId(mutable=true)
 	private String trainingName;
 	private String trTypeID;
+	private String productName;
 	private Date startDate;
 	private Date dueDate;
 	private String preReq;
@@ -52,10 +53,16 @@ public class Training_Dtl {
     private Boolean approval;
     private String certId;
     private Boolean isActive;
-    private Boolean isDeleted;
+    private Boolean isDeleted;        
+    private String userRole;    
+    private Date expiryDate;
+    private String certLink;
+    private String reqTraining;
+    private String typeCert;
+    private String type;
     private String createdBy;
     private Date createdDate;
     private String updatedBy;
-    private Date updatedDate; 
+    private Date updatedDate;
 	
 }
