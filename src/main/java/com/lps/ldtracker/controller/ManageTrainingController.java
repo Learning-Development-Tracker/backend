@@ -26,13 +26,14 @@ import com.lps.ldtracker.model.Training_Dtl;
 
 
 @RestController
-@RequestMapping("/api/v1/dashboard/")
+@RequestMapping("/api/v1/dashboard")
 
 
 public class ManageTrainingController {
 	
 	@Autowired
 	ManageTrainingService manageTrainingService;
+	
 	
 	@GetMapping(value="/getTrainingList")
 	public ResponseEntity<Result> getTrainingList() {
