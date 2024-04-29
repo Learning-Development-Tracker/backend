@@ -4,7 +4,7 @@ import com.lps.ldtracker.dto.ResourceDto;
 import com.lps.ldtracker.entity.Resource;
 
 public class ResourceMapper {
-	public static Resource resourceMapper(ResourceDto resourceDto) {
+	public static Resource resourceMapper(ResourceDto resourceDto, String generatedPassword) {
 		return new Resource(
 					resourceDto.getId(),
 					resourceDto.getLastname(),
@@ -13,14 +13,14 @@ public class ResourceMapper {
 					resourceDto.getSuffix(),
 					resourceDto.getGender(),
 					resourceDto.getEmailAddress(),
-					resourceDto.getPassword(),
+					generatedPassword,
 					resourceDto.getCareerStep(),
 					resourceDto.getEmpId(),
 					resourceDto.getRegion(),
 					resourceDto.getTeam(),
 					resourceDto.getStatus(),
 					resourceDto.getSkills(),
-					resourceDto.isEnabled(),
+					false,
 					resourceDto.getRole()
 				);
 	}
@@ -41,7 +41,7 @@ public class ResourceMapper {
 					resource.getTeam(),
 					resource.getStatus(),
 					resource.getSkills(),
-					resource.isEnabled(),
+					resource.getIsEnabled(),
 					resource.getRole()
 				);
 	}

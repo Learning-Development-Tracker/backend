@@ -17,6 +17,7 @@ public class LdTrackerConstants {
 	public static final String INVALID_LASTNAME= "INVALID_LASTNAME";
 	public static final String INVALID_ROLE= "INVALID_ROLE";
 	public static final String ERROR_OCCURED = "ERROR_OCCURED";
+	public static final String INVALID_REGION = "INVALID_REGION";
 	
 	public static final String USER_ALREADY_EXISTS = "User already exists.";
 	public static final String ERROR = "error";

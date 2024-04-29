@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lps.ldtracker.dto.ResourceDto;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.ForgotPasswordRequest;
 import com.lps.ldtracker.model.LoginRequest;
@@ -17,6 +18,7 @@ import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UpdatePasswordRequest;
 import com.lps.ldtracker.model.VerifyOtpRecord;
 import com.lps.ldtracker.service.AuthenticationService;
+import com.lps.ldtracker.service.ResourceService;
 import com.lps.ldtracker.service.UserForgotPasswordService;
 import com.lps.ldtracker.service.UserService;
 
@@ -30,8 +32,9 @@ public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
 	private final UserForgotPasswordService userForgotPasswordService; 
+	private final ResourceService resourceService;
 	
-	private final UserService userService; 
+	private final UserService userService;
  
 	@PostMapping(value="/register") 
 	public ResponseEntity<Result> registerUser(@RequestBody RegistrationRequest request, final HttpServletRequest httpRequest){
@@ -86,10 +89,10 @@ public class AuthenticationController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/addUser")
-	public ResponseEntity<?> addUser() {
-		String result = "OK";
-		return new ResponseEntity<>(result, HttpStatus.OK); 
+	@PostMapping(value="/addResource")
+	public ResponseEntity<Result> addUser(@RequestBody ResourceDto resourceDto, final HttpServletRequest httpRequest) {
+
+		return new ResponseEntity<Result>(resourceService.addResource(resourceDto), HttpStatus.OK); 
 	}
 	
 }
