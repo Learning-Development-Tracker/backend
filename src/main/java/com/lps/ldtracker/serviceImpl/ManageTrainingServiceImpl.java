@@ -7,10 +7,12 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.lps.ldtracker.model.OTP;
 import com.lps.ldtracker.model.Training_Dtl;
 import com.lps.ldtracker.model.UserT;
 import com.lps.ldtracker.service.EmailService;
@@ -34,6 +36,12 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService{
 	@Override
 	public List<Training_Dtl> getTrainingList() { 
 		return trainingRepository.findAll();
+	}
+	
+	@Override
+	public void deleteTrainingById(Integer Id) {
+		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
+		existingTraining.ifPresent(trainingRepository::delete);
 	}
 }
 
