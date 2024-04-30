@@ -3,6 +3,7 @@ package com.lps.ldtracker.model;
 import java.sql.Date;
 import java.util.Collection;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,7 +37,8 @@ public class Training_Dtl {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "training_dtl")
 	@SequenceGenerator(sequenceName = "training_seq", allocationSize = 1, name = "training_dtl")
-	private Integer trainingId;
+	@Column(name = "id")
+	private Integer id;
 	@NaturalId(mutable=true)
 	private String trainingName;
 	private String trTypeID;
