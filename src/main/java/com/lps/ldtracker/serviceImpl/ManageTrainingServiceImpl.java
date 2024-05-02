@@ -43,6 +43,23 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService{
 		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
 		existingTraining.ifPresent(trainingRepository::delete);
 	}
+
+	@Override
+    public Training_Dtl addTraining(Training_Dtl training) {
+        return trainingRepository.save(training);
+    }
+	
+
+	@Override
+    public Training_Dtl editTraining(Integer Id, Training_Dtl updatedTraining) {
+		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
+        if (existingTraining != null) {
+            updatedTraining.setId(Id);
+            return trainingRepository.save(updatedTraining);
+        } else {
+            return null;
+        }
+    }
 }
 
 
