@@ -9,6 +9,8 @@ public interface ManageTrainingService {
 
 	List<Training_Dtl> getTrainingList();
 	public void deleteTrainingById(Integer Id);
+	Training_Dtl addTraining(Training_Dtl training);
+	Training_Dtl editTraining(Integer id, Training_Dtl training);
 	
 
 }
