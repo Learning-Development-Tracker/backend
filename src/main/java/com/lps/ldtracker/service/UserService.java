@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
-import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.model.UserT;
 
 public interface UserService {
@@ -14,6 +13,5 @@ public interface UserService {
 	public Optional<UserT> findByemail(String email);
 	public void saveUserVerificationToken(UserT user, String token);
 	public Result isVerified(String otp, String email);
-	Optional<UserDtl> findByUserName(String username);
 
 }
