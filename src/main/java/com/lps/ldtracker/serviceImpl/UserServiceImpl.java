@@ -1,10 +1,13 @@
 package com.lps.ldtracker.serviceImpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
+import org.apache.catalina.startup.Tomcat.ExistingStandardWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
-import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LdTrackerError;
+import com.lps.ldtracker.model.MemberDetail;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.model.UserT;
 import com.lps.ldtracker.model.ValidationParamCollection;
+import com.lps.ldtracker.repository.MemberDtlRepository;
+import com.lps.ldtracker.repository.UserDtlRepository;
 import com.lps.ldtracker.repository.UserRepository;
 import com.lps.ldtracker.repository.VerificationTokenRepository;
 import com.lps.ldtracker.security.RoleSecurity;
@@ -30,6 +36,8 @@ import com.lps.ldtracker.service.JwtService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.UserService;
 
+import io.jsonwebtoken.lang.Strings;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,6 +47,10 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
 	 
 	private final UserRepository userRepository;
+	
+	private final UserDtlRepository userDtlRepository;
+	
+	private final MemberDtlRepository memmberDtlRepository;
 	 
 	private final PasswordEncoder passwordEncoder;
 	
@@ -57,66 +69,116 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userRepository.findAll();
 	}
 
+//	@Override
+//	public Result registerUser(RegistrationRequest request) { 
+//		Result result = new Result();
+//		Optional<UserT> user = this.findByemail(request.email());
+//		List<LdTrackerError> errors = new ArrayList<>();
+//		try {
+//			
+//			this.validateRegisterInputs(request, errors);
+//			
+//			if(!errors.isEmpty()) {
+//				    result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
+//		            return result;
+//			}
+//			
+//			if(user.isPresent()) {
+//				result.setMessage(LdTrackerConstants.USER_ALREADY_EXISTS);
+//				result.setStatus(LdTrackerConstants.ERROR);
+//				return result;
+//			} else {
+//				String otp = generateOtp();
+//				var userBuilder = UserT
+//					.builder()
+//					.email(request.email())
+//					.otp(otp)
+//					.username(request.username())
+//					.password(passwordEncoder.encode(request.password()))
+//					.status(request.status())
+//					.phoneNo(request.phoneNo())
+//					.address(request.address())
+//					.position(request.position())
+//					.positionCode(request.positionCode())
+//					.firstName(request.firstName())
+//					.lastName(request.lastName())
+//					.role(request.role())
+//					.isEnabled(false)
+//					.build();
+//				
+//				sendVerificationEmail(request.email(), otp);
+//				userRepository.save(userBuilder);
+//			
+//				var jwtToken = jwtService.generateToken(userBuilder);
+//				
+//				AuthenticationResponse
+//					.builder()
+//					.token(jwtToken)
+//					.build();
+//				
+//				var newUser = new UserT();
+//				newUser.setEmail(request.email());
+//				newUser.setUsername(request.username());
+//				newUser.setPassword(passwordEncoder.encode(request.password()));
+//				newUser.setRole(RoleSecurity.EMPLOYEE);
+//
+//				result.setData(userBuilder);
+//				result.setMessage(LdTrackerConstants.SUCCESS);
+//				result.setStatus(LdTrackerConstants.SUCCESS);
+//				
+//				return result;
+//			} 
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			logger.error("ERROR registerUser: " + e.getMessage());
+//
+//		}
+//		return result;
+//	}
+
 	@Override
-	public Result registerUser(RegistrationRequest request) { 
+	public Result registerUser(RegistrationRequest request) {
 		Result result = new Result();
-		Optional<UserT> user = this.findByemail(request.email());
+		Optional<UserDtl> user = this.findByUserName(request.username());
+		logger.info("user {}", user.toString());
 		List<LdTrackerError> errors = new ArrayList<>();
 		try {
-			
+
 			this.validateRegisterInputs(request, errors);
-			
-			if(!errors.isEmpty()) {
-				    result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
-		            return result;
+			if (!errors.isEmpty()) {
+				result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
+				return result;
 			}
-			
-			if(user.isPresent()) {
+
+			if (user.isPresent()) {
 				result.setMessage(LdTrackerConstants.USER_ALREADY_EXISTS);
 				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			} else {
-				String otp = generateOtp();
-				var userBuilder = UserT
-					.builder()
-					.email(request.email())
-					.otp(otp)
-					.username(request.username())
-					.password(passwordEncoder.encode(request.password()))
-					.status(request.status())
-					.phoneNo(request.phoneNo())
-					.address(request.address())
-					.position(request.position())
-					.positionCode(request.positionCode())
-					.firstName(request.firstName())
-					.lastName(request.lastName())
-					.role(request.role())
-					.isEnabled(false)
-					.build();
-				
-				sendVerificationEmail(request.email(), otp);
-				userRepository.save(userBuilder);
-			
-				var jwtToken = jwtService.generateToken(userBuilder);
-				
-				AuthenticationResponse
-					.builder()
-					.token(jwtToken)
-					.build();
-				
-				var newUser = new UserT();
-				newUser.setEmail(request.email());
-				newUser.setUsername(request.username());
-				newUser.setPassword(passwordEncoder.encode(request.password()));
-				newUser.setRole(RoleSecurity.EMPLOYEE);
+				var userBuilder = UserDtl.builder()
+						.userName(request.username())
+						.userPass(passwordEncoder.encode(request.password()))
+						.isActive(1).isDeleted(0).createdBy(RoleSecurity.EMPLOYEE.name())
+						.createdDate(LocalDateTime.now()).build();
+				userDtlRepository.save(userBuilder);
 
+				var memberBuilder = MemberDetail.builder()
+						.firstName(request.firstName())
+						.lastName(request.lastName())
+						.employeeNum(new Random().nextInt())
+						.emailAddress(request.email())
+						.careerLevelId("").teamId("")
+						.statusId("").build();
+				memmberDtlRepository.save(memberBuilder);
+						
 				result.setData(userBuilder);
 				result.setMessage(LdTrackerConstants.SUCCESS);
 				result.setStatus(LdTrackerConstants.SUCCESS);
-				
+
 				return result;
-			} 
-			
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("ERROR registerUser: " + e.getMessage());
@@ -124,7 +186,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		}
 		return result;
 	}
-
+	
 	@Override
 	public Optional<UserT> findByemail(String email) { 
 		return userRepository.findByEmail(email);
@@ -144,6 +206,10 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 			.orElseThrow(()-> new UsernameNotFoundException("UserT not found"));
 	}
 
+	@Override
+	public Optional<UserDtl> findByUserName(String username) {
+		return userDtlRepository.findByUserName(username);
+	}
 	
 	private String generateOtp() {
 		Random random = new Random();

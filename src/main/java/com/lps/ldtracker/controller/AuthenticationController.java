@@ -2,6 +2,7 @@ package com.lps.ldtracker.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/authentication")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
 public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
