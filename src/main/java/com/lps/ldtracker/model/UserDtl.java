@@ -2,17 +2,22 @@ package com.lps.ldtracker.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.lps.ldtracker.security.RoleSecurity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,12 +46,6 @@ public class UserDtl implements UserDetails{
 	private String userName;
 	@Column(name = "user_pass")
 	private String userPass;
-	@Column(name = "role_id")
-	private String roleId;
-	@Column(name = "status_id")
-	private String statusId;
-	@Column(name = "member_id")
-	private String memberId;
 	@Column(name = "is_deleted")
 	private Integer isDeleted;
 	@Column(name = "created_by")
@@ -57,11 +56,19 @@ public class UserDtl implements UserDetails{
 	private String updatedBy;
 	@Column(name = "updated_date")
 	private LocalDateTime updatedDate;
+	@OneToOne
+	@JoinColumn(name = "member_id", nullable = true)
+	private MemberDetail memberDtl;
+	@OneToOne
+	@JoinColumn(name = "status_id", nullable = true)
+	private StatusDetail statusDtl;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role_id")
+	private RoleSecurity role;
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return role.getAuthorities();
 	}
 
 	@Override
