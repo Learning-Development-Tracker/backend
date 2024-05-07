@@ -1,26 +1,27 @@
 package com.lps.ldtracker.service;
 
-import com.lps.ldtracker.constants.LdTrackerConstants;
-import com.lps.ldtracker.exception.AuthenticationFailedException;
-import com.lps.ldtracker.model.AuthenticationResponse;
-import com.lps.ldtracker.model.LoginRequest;
-import com.lps.ldtracker.repository.UserRepository;
-
-import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import com.lps.ldtracker.constants.LdTrackerConstants;
+import com.lps.ldtracker.exception.AuthenticationFailedException;
+import com.lps.ldtracker.model.AuthenticationResponse;
+import com.lps.ldtracker.model.LoginRequest;
+import com.lps.ldtracker.model.UserDtl;
+import com.lps.ldtracker.repository.UserDtlRepository;
+import com.lps.ldtracker.security.RoleSecurity;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 	
-	private final UserRepository userRepository;
+	private final UserDtlRepository userDtlRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
 
@@ -38,12 +39,12 @@ public class AuthenticationService {
 	        throw new AuthenticationFailedException("Password length must be between " + LdTrackerConstants.MIN_PASSWORD_LENGTH + " and " + LdTrackerConstants.MAX_PASSWORD_LENGTH + " characters");
 	    }
 		
-		var user = userRepository.findByUsername(username)
+		var userDtl = userDtlRepository.findByUserName(username)
 			.orElseThrow(() -> {
 		        throw new AuthenticationFailedException("User not found");
 		    });
 		
-		if (!user.isEnabled()) {
+		if (1 > userDtl.getIsActive()) {
             throw new AuthenticationFailedException("Your account is inactive");
 		}
 		
@@ -55,10 +56,10 @@ public class AuthenticationService {
 		        )
 		    );
 		} catch (AuthenticationException authenticationException) {
-			throw new AuthenticationFailedException("Incorrect username or password");
+			throw new AuthenticationFailedException(LdTrackerConstants.USER_INCORRECT);
 		}
 		
-		var jwtToken = jwtService.generateToken(user);
+		var jwtToken = jwtService.generateToken(userDtl);
 		
 		return AuthenticationResponse
 			.builder()
