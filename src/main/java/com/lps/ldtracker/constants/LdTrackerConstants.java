@@ -36,9 +36,11 @@ public class LdTrackerConstants {
 	public static final String AUTH_FAILED= "Authentication failed";
 	public static final String REQ_FIELD_MISSING= "Required field missing";
 	public static final String REQ_PASSWORD_LENGTH= "Please enter a password between 8 and 32 characters in length";
+	public static final String USER_INCORRECT = "Incorrect username or password";
 	
 	public static final Integer MIN_USERNAME_LENGTH = 8;
 	public static final Integer MAX_USERNAME_LENGTH = 32;
 	public static final Integer MIN_PASSWORD_LENGTH = 8;
 	public static final Integer MAX_PASSWORD_LENGTH = 32;
+	
 }
