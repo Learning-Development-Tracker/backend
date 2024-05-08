@@ -29,7 +29,7 @@ public class ManageTrainingDto {
     private boolean trcondition;
     private String trconditionValue;
     private boolean active;
-    private Date expirydate;
+    private String expirydate;
     
 
 }

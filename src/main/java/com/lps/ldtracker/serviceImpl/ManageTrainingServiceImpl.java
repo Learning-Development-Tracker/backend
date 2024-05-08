@@ -72,7 +72,7 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
 			    res.setTrcondition((Boolean) result[16]);
 			    res.setTrconditionValue((String) result[17]);
 			    res.setActive((Boolean) result[18]); 
-			    res.setExpirydate((Date) result[19]);
+			    res.setExpirydate((String) result[19]);
 			    resList.add(res);		
 			});
 		} catch (Exception e) {
