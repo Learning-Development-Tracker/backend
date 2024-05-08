@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class ManageTrainingDto {	
 
-	private Integer Id;	
+	private String Id;	
 	private String trainingname;
 	private String trainingtype;
 	private String productname;

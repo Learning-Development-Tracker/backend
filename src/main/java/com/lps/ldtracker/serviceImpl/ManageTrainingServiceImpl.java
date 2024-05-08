@@ -53,7 +53,7 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
 			    ManageTrainingDto res = new ManageTrainingDto();
-			    res.setId((Integer) result[0]);
+			    res.setId((String) result[0]);
 			    res.setTrainingname((String) result[1]);    
 			    res.setTrainingtype((String) result[2]);    
 			    res.setProductname((String) result[3]);
