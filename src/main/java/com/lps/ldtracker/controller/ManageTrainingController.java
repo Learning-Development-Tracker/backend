@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lps.ldtracker.dto.ManageTrainingDto;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.service.ManageTrainingService;
 
@@ -33,10 +34,15 @@ public class ManageTrainingController {
 	
 	@GetMapping(value="/getTrainingList")
 	public ResponseEntity<Result> getTrainingList() {
-		List<Training_Dtl> trainingList = this.manageTrainingService.getTrainingList();
 		Result result = new Result();
-		result.setData(trainingList);
-		
+		try {
+			List<ManageTrainingDto> trainingDtl =  this.manageTrainingService.getTrainingList();
+			result.setData(trainingDtl);
+			result.setStatus("SUCCESS");
+		} catch (Exception e) {
+			result.setStatus("FAILED");
+			e.printStackTrace();
+		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
