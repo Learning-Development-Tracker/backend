@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.repository.UserDtlRepository;
 import com.lps.ldtracker.security.RoleSecurity;
@@ -30,7 +31,7 @@ public class ApplicationConfiguration {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return username -> userDtlRepository.findByUserName(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found."));
+			.orElseThrow(() -> new UsernameNotFoundException(LdTrackerConstants.USER_DOES_NOT_EXISTS));
 	}
 	
 	@Bean

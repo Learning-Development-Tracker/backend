@@ -12,4 +12,5 @@ public interface UserDtlService {
 	public Result registerUser(RegistrationRequest request);
 	public void saveUserVerificationToken(UserDtl user, String token);
 	Optional<UserDtl> findByUserName(String username);
+	public Result resetPassword(RegistrationRequest request);
 }

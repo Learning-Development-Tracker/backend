@@ -136,7 +136,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { 
 		return userDtlRepository.findByUserName(email)
 			.map(UserRegistrationDetails::new)
-			.orElseThrow(()-> new UsernameNotFoundException("UserDtl not found"));
+			.orElseThrow(()-> new UsernameNotFoundException(LdTrackerConstants.USER_DOES_NOT_EXISTS));
 	}
 
 	@Override
@@ -171,6 +171,37 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	    validationTuples.add(new ValidationParamCollection<>(String.valueOf(param.role()), "Role", LdTrackerConstants.INVALID_ROLE));
 
 		return validationTuples;
+	}
+
+	@Override
+	public Result resetPassword(RegistrationRequest request) {
+		Result result = new Result();
+		Optional<UserDtl> user = this.findByUserName(request.username());
+		try {
+
+			if (!user.isPresent()) {
+				result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
+				result.setStatus(LdTrackerConstants.ERROR);
+				return result;
+			} else {
+				UserDtl userDtl = user.get();
+				userDtl.setUserName(request.username());
+				userDtl.setUserPass(passwordEncoder.encode(request.password()));
+				userDtl.setUpdatedDate(LocalDateTime.now());
+				userDtlRepository.save(userDtl);				
+				result.setData(userDtl);
+				result.setMessage(LdTrackerConstants.SUCCESS_PASSWORD_UPDATE);
+				result.setStatus(LdTrackerConstants.SUCCESS);
+
+				return result;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("ERROR resetPassword: " + e.getMessage());
+
+		}
+		return result;
 	}
 	
 	
