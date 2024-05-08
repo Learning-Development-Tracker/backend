@@ -1,9 +1,6 @@
 package com.lps.ldtracker.serviceImpl;
 
 
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,23 +10,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.procedure.ProcedureCall;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageTrainingDto;
-import com.lps.ldtracker.model.OTP;
 import com.lps.ldtracker.model.Training_Dtl;
-import com.lps.ldtracker.model.UserT;
-import com.lps.ldtracker.service.EmailService;
-import com.lps.ldtracker.service.JwtService;
+import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageTrainingService;
-import com.lps.ldtracker.service.ResultService;
 
 import lombok.RequiredArgsConstructor;
-
-import com.lps.ldtracker.repository.TrainingRepository;
-import com.lps.ldtracker.repository.UserRepository;
-import com.lps.ldtracker.repository.VerificationTokenRepository;
 
 
 @Service
