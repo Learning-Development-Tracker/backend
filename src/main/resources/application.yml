@@ -14,7 +14,7 @@ spring:
       h2:
           console.enabled: true
       datasource:
-          url: jdbc:h2:file:C:/Users/82010603/test;AUTO_SERVER=TRUE
+          url: jdbc:h2:file:C:/Users/Spencer/test;AUTO_SERVER=TRUE
           username: sa
           password: password
           driverClassName: org.h2.Driver
@@ -31,5 +31,11 @@ spring:
               auth: true
               starttls:
                 enable: true
+upload:
+    files:
+        #path: D:\\tmp\\uploads\\files
+        # path: /Users/theara/project/dev.io/rean-spring-framework/multiple-file-upload/src/main/resources/
+        path: C:/temp/files/
+        extensions: jpg, jpeg, png, gif
 server: 
   port: 80

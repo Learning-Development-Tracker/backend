@@ -21,7 +21,8 @@ public class ResourceMapper {
 					resourceDto.getStatus(),
 					resourceDto.getSkills(),
 					false,
-					resourceDto.getRole()
+					resourceDto.getRole(),
+					resourceDto.getCertifications()
 				);
 	}
 	
@@ -42,7 +43,8 @@ public class ResourceMapper {
 					resource.getStatus(),
 					resource.getSkills(),
 					resource.getIsEnabled(),
-					resource.getRole()
+					resource.getRole(),
+					resource.getCertifications()
 				);
 	}
 }

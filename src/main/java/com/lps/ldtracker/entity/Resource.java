@@ -1,6 +1,7 @@
 package com.lps.ldtracker.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.lps.ldtracker.model.UserT;
 import com.lps.ldtracker.security.RoleSecurity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +17,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,7 +36,7 @@ public class Resource implements UserDetails{
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "resource")
 	@SequenceGenerator(sequenceName = "resource_seq", allocationSize = 1, name = "resource")
-	private Integer id;
+	private Long id;
 	private String lastname;
 	private String firstname;
 	private String middlename;
@@ -54,6 +58,10 @@ public class Resource implements UserDetails{
 	
 	@Enumerated(EnumType.STRING)
 	private RoleSecurity role;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="resource_id", referencedColumnName = "id")
+    private List<CertificationFileUpload> certifications;
 	
 	@Override
 	public String getPassword() {

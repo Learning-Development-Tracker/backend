@@ -10,4 +10,9 @@ public interface ResourceService {
 	Result addResource(ResourceDto resourceDto);
 
 	Optional<Resource> findByEmailAddress(String emailAddress);
+	
+	Result editResource(ResourceDto resourceDto);
+	Result viewResource(Long id);
+
+	Optional<Resource> findById(Long id);
 }

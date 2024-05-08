@@ -51,6 +51,11 @@ public class ResourceImpl implements ResourceService{
 	}
 	
 	@Override
+	public Optional<Resource> findById(Long id) { 
+		return resourceRepository.findById(id);
+	}
+	
+	@Override
 	public Result addResource(ResourceDto resourceDto) {
 		try {
 			Result result = new Result();
@@ -75,6 +80,35 @@ public class ResourceImpl implements ResourceService{
 			logger.error("ERROR add resource: " + e.getMessage());
 			throw e;
 		}
+	}
+
+
+	@Override
+	public Result editResource(ResourceDto resourceDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Result viewResource(Long id) {
+		try {
+			Result result = new Result();
+			Optional <Resource> resource = this.findById(id); 
+			if (!resource.isPresent()) {
+				result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
+				result.setStatus(LdTrackerConstants.ERROR);
+				return result;
+			}
+			result.setMessage(LdTrackerConstants.SUCCESS);
+			result.setStatus(LdTrackerConstants.SUCCESS);
+			result.setData(resource);
+			return result;
+		}catch (Exception e) {
+			e.printStackTrace();
+			logger.error("ERROR view resource: " + e.getMessage());
+			throw e;
+		}
+		
 	}
 	
 	
