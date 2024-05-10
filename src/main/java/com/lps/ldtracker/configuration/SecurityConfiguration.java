@@ -12,17 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.lps.ldtracker.permission.Permission.HR_CREATE;
-import static com.lps.ldtracker.permission.Permission.HR_DELETE;
-import static com.lps.ldtracker.permission.Permission.HR_READ;
-import static com.lps.ldtracker.permission.Permission.HR_UPDATE;
-import static com.lps.ldtracker.permission.Permission.MANAGER_CREATE;
-import static com.lps.ldtracker.permission.Permission.MANAGER_DELETE;
-import static com.lps.ldtracker.permission.Permission.MANAGER_READ;
-import static com.lps.ldtracker.permission.Permission.MANAGER_UPDATE;
-import static com.lps.ldtracker.security.RoleSecurity.EMPLOYEE;
-import static com.lps.ldtracker.security.RoleSecurity.HR;
-import static com.lps.ldtracker.security.RoleSecurity.MANAGER;
+import static com.lps.ldtracker.permission.Permission.*;
+import static com.lps.ldtracker.security.RoleSecurity.*;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -42,6 +33,7 @@ public class SecurityConfiguration {
 		"/api/health",
 		"/api/v1/authentication/**",
 		"/api/v1/forgot-password/**",
+		"api/v1/admin/**"
 //		"/h2-console/**"
     };
 	
@@ -57,17 +49,17 @@ public class SecurityConfiguration {
 				.requestMatchers(WHITE_LIST_URL)
 				.permitAll()
 				.requestMatchers("/api/v1/admin/**")
-				.hasAnyRole(HR.name(), MANAGER.name())
+				.hasAnyRole(ADMIN.name(), USER.name())
 				.requestMatchers(GET, "/api/v1/admin/**")
-				.hasAnyAuthority(HR_READ.name(), MANAGER_READ.name())
+				.hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
                 .requestMatchers(POST, "/api/v1/admin/**")
-                .hasAnyAuthority(HR_CREATE.name(), MANAGER_CREATE.name())
+                .hasAnyAuthority(ADMIN_CREATE.name(), USER_CREATE.name())
                 .requestMatchers(PUT, "/api/v1/admin/**")
-                .hasAnyAuthority(HR_UPDATE.name(), MANAGER_UPDATE.name())
+                .hasAnyAuthority(ADMIN_UPDATE.name(), USER_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/admin/**")
-                .hasAnyAuthority(HR_DELETE.name(), MANAGER_DELETE.name())
+                .hasAnyAuthority(ADMIN_DELETE.name(), USER_DELETE.name())
                 .requestMatchers("/api/v1/**")
-				.hasAnyRole(EMPLOYEE.name())
+				.hasAnyRole(GUEST.name())
                 .anyRequest()
                 .authenticated()
 			)

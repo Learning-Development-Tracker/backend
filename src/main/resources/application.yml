@@ -1,4 +1,6 @@
 spring:
+    profiles:
+        active: dev
     datasource:
         url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
         username: ltddbadmin
@@ -20,7 +22,7 @@ spring:
 #         driverClassName: org.h2.Driver
 #     jpa:
 #         database-platform: org.hibernate.dialect.H2Dialect
-     mail:
+    mail:
       host: smtp.gmail.com
       port: 587
       username: lpshris1@gmail.com
