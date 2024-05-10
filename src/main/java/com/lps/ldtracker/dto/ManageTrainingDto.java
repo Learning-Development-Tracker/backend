@@ -11,25 +11,25 @@ import lombok.Data;
 public class ManageTrainingDto {	
 
 	private String Id;	
-	private String trainingname;
-	private String trainingtype;
-	private String productname;
-	private Date startdate;
-	private Date duedate;
-	private String prereq;
+	private String trainingName;
+	private String trainingType;
+	private String productName;
+	private Date startDate;
+	private Date dueDate;
+	private String preReq;
 	private String description;
-	private String traininglink;
-	private String trainingtags;  
-    private Boolean isrequired;
+	private String trainingLink;
+	private String trainingTags;  
+    private Boolean isRequired;
     private Boolean certification;
-    private String certificationname;
+    private String certificationName;
     private String duration;
     private String fee;
-    private String certlink;
-    private boolean trcondition;
-    private String trconditionValue;
+    private String certLink;
+    private Integer trCondition;
+    private String trConditionValue;
     private boolean active;
-    private String expirydate;
+    private String expiryDate;
     
 
 }

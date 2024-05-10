@@ -92,5 +92,12 @@ public class ErrorHandlingService {
     		errors.add(new LdTrackerError(errorCode, messageSource.getMessage("validation.number.message", msgParam, LocaleContextHolder.getLocale())));
     	}
     }
+
+	public void validateInputParametersId(String id, List<LdTrackerError> errors) {
+		
+		  if (id == null || id == "") {
+	            errors.add(new LdTrackerError(LdTrackerConstants.MISSING_PARAMETERS, "Training ID is required"));
+	        }
+	}
     
 }

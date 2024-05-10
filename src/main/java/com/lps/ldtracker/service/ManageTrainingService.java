@@ -12,6 +12,7 @@ public interface ManageTrainingService {
 	public void deleteTrainingById(Integer Id);
 	Training_Dtl addTraining(Training_Dtl training);
 	Training_Dtl editTraining(Integer id, Training_Dtl training);
+	String deleteTraining(String trainingId);
 	
 
 }
