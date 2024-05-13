@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lps.ldtracker.dto.ManageResourceDto;
 //import com.lps.ldtracker.model.Resource_Dtl;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.model.ViewTrainingDetail;
 import com.lps.ldtracker.service.ManageResourcesService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,5 +57,19 @@ public class ManageResourcesController {
 //		
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //	}
+	
+	@GetMapping(value="/getViewTrainingDtl")
+	public ResponseEntity<Result> getViewTrainingDtl() {
+		Result result = new Result();
+		try {
+			List<ViewTrainingDetail> viewTrainingDtl = this.manageResourcesService.getAllViewTrainingDetails();
+			result.setData(viewTrainingDtl);
+			result.setStatus("SUCCESS");
+		} catch (Exception e) {
+			result.setStatus("FAILED");
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 }
