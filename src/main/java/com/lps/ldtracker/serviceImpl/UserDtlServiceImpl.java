@@ -6,14 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.procedure.ProcedureCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.lps.ldtracker.configuration.RealSessionAware;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -22,6 +27,7 @@ import com.lps.ldtracker.model.MemberDetail;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.StatusDetail;
+import com.lps.ldtracker.model.UserDetail;
 import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.model.ValidationParamCollection;
 import com.lps.ldtracker.repository.MemberDtlRepository;
@@ -35,11 +41,13 @@ import com.lps.ldtracker.service.JwtService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.UserDtlService;
 
+
+import jakarta.persistence.ParameterMode;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
+public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, RealSessionAware{
 	private static final Logger logger =   LoggerFactory.getLogger(UserDtlServiceImpl.class);
 
 	
@@ -58,7 +66,10 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	private final ErrorHandlingService errorService;
 	
 	private final ResultService resultService;
-
+	private static final String SP_GETUSERINFO = "sp_getUserInfo";
+	@Autowired
+	SessionFactory sessionFactory;
+	
 	@Override
 	public List<UserDtl> getUserList() { 
 		return userDtlRepository.findAll();
@@ -207,6 +218,42 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 
 		return result;
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<UserDetail> getUserById(String id) {
+
+	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    try  {
+	    		Session session = getRealSession(sessionFactory);
+	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
+	            storedProcedureCall.registerStoredProcedureParameter("MemberID", String.class, ParameterMode.IN);
+	            storedProcedureCall.setParameter("MemberID", id);
+	            List<Object[]> recordList = storedProcedureCall.getResultList();
+	                recordList.forEach(result -> {
+	                    UserDetail res = new UserDetail();
+	                    // Map the retrieved attributes to UserDetail object
+	                    res.setLastName((String) result[0]);
+	                    res.setFirstName((String) result[1]);
+	                    res.setMiddleName((String) result[2]);
+	                    res.setSuffix((String) result[3]);
+	                    res.setGender((String) result[8]);
+	                    res.setEmailAddress((String) result[9]);
+	                    res.setCareerStep((String) result[10]);
+	                    res.setEmployeeID((int) result[11]);
+	                    res.setRegion((String) result[4]);
+	                    // Assuming role and team information are available
+	                    res.setRoles((String) result[5]);
+	                    res.setTeams((String) result[6]);
+	                    // Assuming employment status is available as a boolean
+	                    res.setEmploymentStatus((String) result[7]);
+	                    resList.add(res);
+	                });
+	        
+	    } catch (Exception e) {
+	        logger.error("Error occurred while fetching user details: " + e.getMessage(), e);
+	    }
+	    return resList;
+	}
 	
 }
