@@ -59,14 +59,16 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 			    res.setTrainingTags((String) result[9]);
 			    res.setIsRequired((Boolean) result[10]);
 			    res.setCertification((Boolean) result [11]);
-			    res.setCertificationName((String) result[12]);
-			    res.setDuration((String) result[13]);
-			    res.setFee((String) result[14]);
-			    res.setCertLink((String) result[15]);
-			    res.setTrCondition((Integer) result[16]);
-			    res.setTrConditionValue((String) result[17]);
-			    res.setActive((Boolean) result[18]); 
-			    res.setExpiryDate((String) result[19]);
+			    res.setCertID((String) result[12]);
+			    res.setCertName((String) result[13]);
+			    res.setDuration((String) result[14]);
+			    res.setFee((Integer) result[15]);
+			    res.setCurrency((String) result[16]);
+			    res.setCertLink((String) result[17]);
+			    res.setTrCondition((Integer) result[18]);
+			    res.setTrConditionValue((String) result[19]);
+			    res.setActive((Boolean) result[20]); 
+			    res.setExpiryDate((Date) result[21]);
 			    resList.add(res);		
 			});
 		} catch (Exception e) {
