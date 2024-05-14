@@ -2,11 +2,14 @@ package com.lps.ldtracker.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lps.ldtracker.security.RoleSecurity;
 
 import jakarta.persistence.Column;
@@ -57,9 +60,11 @@ public class UserDtl implements UserDetails{
 	@Column(name = "updated_date")
 	private LocalDateTime updatedDate;
 	@OneToOne
+	@JsonIgnore
 	@JoinColumn(name = "member_id", nullable = true)
 	private MemberDetail memberDtl;
 	@OneToOne
+	@JsonIgnore
 	@JoinColumn(name = "status_id", nullable = true)
 	private StatusDetail statusDtl;
 	@Enumerated(EnumType.STRING)
@@ -68,7 +73,7 @@ public class UserDtl implements UserDetails{
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return role.getAuthorities();
+		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 
 	@Override

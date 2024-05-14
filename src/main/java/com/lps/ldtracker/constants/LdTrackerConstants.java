@@ -27,6 +27,7 @@ public class LdTrackerConstants {
 	public static final String YOUR_OTP = "Your verification OTP is: ";
 	
 	//Forgot PW
+	public static final String USER_DOES_EXISTS = "User found.";
 	public static final String USER_DOES_NOT_EXISTS = "User not found.";
 	public static final String YOU_HAVE_NOT_SENT_OTP = "You have not sent otp";
 	public static final String EXPIRED_OTP = "Expired otp";

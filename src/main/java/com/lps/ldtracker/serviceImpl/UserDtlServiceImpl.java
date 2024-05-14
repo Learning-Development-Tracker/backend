@@ -9,6 +9,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LdTrackerError;
+import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.MemberDetail;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
@@ -45,7 +48,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	
 	private final UserDtlRepository userDtlRepository;
 	
-	private final MemberDtlRepository memmberDtlRepository;
+	private final MemberDtlRepository memberDtlRepository;
 	
 	private final StatusDtlRepository statusDtlRepository;
 	
@@ -73,7 +76,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 
 			this.validateRegisterInputs(request, errors);
 			if (!errors.isEmpty()) {
-				result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
+				result = resultService.setResult("400", LdTrackerConstants.ERROR_OCCURED, errors, null);
 				return result;
 			}
 
@@ -82,16 +85,9 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			} else {
-				StatusDetail statusDtl = statusDtlRepository.findById("1")
+				StatusDetail statDtl = statusDtlRepository
+						.findAll().stream().findFirst()
 						.orElseThrow(() -> new NotFoundException());
-				var userBuilder = UserDtl.builder()
-						.userName(request.username())
-						.userPass(passwordEncoder.encode(request.password()))
-						.statusDtl(statusDtl).role(RoleSecurity.ADMIN)
-						.isActive(1).isDeleted(0)
-						.createdDate(LocalDateTime.now()).build();
-				userDtlRepository.save(userBuilder);
-
 				var memberBuilder = MemberDetail.builder()
 						.firstName(request.firstName())
 						.lastName(request.lastName())
@@ -99,19 +95,22 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 						.emailAddress(request.email())
 						.careerLevelId("").teamId("")
 						.statusId("").build();
-				memmberDtlRepository.save(memberBuilder);
-						
+				MemberDetail mbrDtl = memberDtlRepository.save(memberBuilder);
+				var userBuilder = UserDtl.builder()
+						.userName(request.username())
+						.userPass(passwordEncoder.encode(request.password()))
+						.statusDtl(statDtl).memberDtl(mbrDtl).role(RoleSecurity.ADMIN)
+						.isActive(1).isDeleted(0)
+						.createdDate(LocalDateTime.now()).build();
+				userDtlRepository.save(userBuilder);						
 				var jwtToken = jwtService.generateToken(userBuilder);
-				
 				AuthenticationResponse
 				.builder()
 				.token(jwtToken)
 				.build();
-				
 				result.setData(userBuilder);
 				result.setMessage(LdTrackerConstants.SUCCESS);
 				result.setStatus(LdTrackerConstants.SUCCESS);
-
 				return result;
 			}
 
@@ -129,6 +128,28 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 		this.tokenRepo.save(vToken);
 	}
 
+	@Override
+	public Result isExistUsername(LoginRequest request) {
+		Result result = new Result();
+		List<LdTrackerError> errors = new ArrayList<>();
+		Boolean uDtl = userDtlRepository.existsByUserName(request.getUsername());
+		this.validateUsernameInput(request, errors);
+		if (!errors.isEmpty()) {
+			result = resultService.setResult("400", LdTrackerConstants.ERROR, errors, null);
+			return result;
+		}
+		if(uDtl) {
+			result.setData(uDtl);
+			result.setMessage(LdTrackerConstants.USER_DOES_EXISTS);
+			result.setStatus(LdTrackerConstants.SUCCESS);
+		} else {
+			result.setData(uDtl);
+			result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
+			result.setStatus(LdTrackerConstants.ERROR);						
+		}		
+		return result ;
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { 
 		return userDtlRepository.findByUserName(email)
@@ -154,6 +175,12 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	    
 	}
 	
+	private void validateUsernameInput(LoginRequest param, List<LdTrackerError> errors) {
+		if(!param.getUsername().isEmpty()) {
+			errorService.validateUserName(param.getUsername(), LdTrackerConstants.INVALID_USERNAME, errors);
+		}
+	}
+	
 	private List<ValidationParamCollection<String, String, String>> getValidationParams(RegistrationRequest param) {
 		List<ValidationParamCollection<String, String, String>> validationTuples = new ArrayList<>();
 		validationTuples.add(new ValidationParamCollection<>(param.address(), "Address", LdTrackerConstants.INVALID_ADDRESS));
@@ -174,16 +201,16 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService{
 	@Override
 	public Result resetPassword(RegistrationRequest request) {
 		Result result = new Result();
+		List<LdTrackerError> errors = new ArrayList<LdTrackerError>();
 		Optional<UserDtl> user = this.findByUserName(request.username());
-
 			if (!user.isPresent()) {
-				result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
+				errors.add(new LdTrackerError(LdTrackerConstants.INVALID_USERNAME, LdTrackerConstants.USER_DOES_NOT_EXISTS));
+				result.setErrors(errors);
 				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			} else {
 				try {
 					UserDtl userDtl = user.get();
-					userDtl.setUserName(request.username());
 					userDtl.setUserPass(passwordEncoder.encode(request.password()));
 					userDtl.setUpdatedDate(LocalDateTime.now());
 					result.setData(userDtl);
