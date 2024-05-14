@@ -13,24 +13,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.dto.ManageTrainingDto;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.service.ManageTrainingService;
 
+import com.lps.ldtracker.model.LdTrackerError;
+import com.lps.ldtracker.service.ResultService;
+import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.lps.ldtracker.model.Training_Dtl;
+import com.lps.ldtracker.repository.TrainingRepository;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/trainings")
 
 
 @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
 public class ManageTrainingController {
 	
+	private final ResultService resultService;
+	private final ErrorHandlingService errorHandlingService;
+	
 	@Autowired
 	ManageTrainingService manageTrainingService;
+	
 	
 	@GetMapping(value="/getTrainingList")
 	public ResponseEntity<Result> getTrainingList() {
@@ -47,7 +62,29 @@ public class ManageTrainingController {
 	}
 	
 	@DeleteMapping("/deleteTraining/{id}")
-    public ResponseEntity<?> deleteTraining(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteTraining(@PathVariable String id) {
+		try {
+			List<LdTrackerError> errors = new ArrayList<>();
+			errorHandlingService.validateInputParametersId(id, errors);
+			
+			if (!errors.isEmpty()) {
+				Result result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
+	            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			}
+			manageTrainingService.deleteTraining(id);
+			Result result = resultService.setResult("200", LdTrackerConstants.SUCCESS, null, null);
+		    return new ResponseEntity<>(result, HttpStatus.OK);
+		     
+		}  catch (Exception e) {
+			 e.printStackTrace();
+		     // Handle other exceptions
+		     return errorHandlingService.createErrorResponse("INTERNAL_SERVER_ERROR", "An error occurred while processing the request", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	@DeleteMapping("/deleteTrainingv2/{id}")
+    public ResponseEntity<?> deleteTrainingV2(@PathVariable Integer id) {
 		try {
 			manageTrainingService.deleteTrainingById(id);
 	        return ResponseEntity.ok().build();
