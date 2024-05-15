@@ -1,10 +1,13 @@
 package com.lps.ldtracker.security;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.lps.ldtracker.model.AccessLevel;
 import com.lps.ldtracker.model.UserDtl;
 
 import lombok.Data;
@@ -19,18 +22,18 @@ public class UserRegistrationDetails implements UserDetails {
 	private String username;
 	private String password;
 	private boolean isEnabled;
-	private RoleSecurity authorities;
+	private AccessLevel authorities;
 
 	public UserRegistrationDetails(UserDtl user) {
 		super(); 
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.isEnabled = user.isEnabled();
-		this.authorities = user.getRole();
+		this.authorities = user.getAccessLevel();
 	}
 	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities.getAuthorities();
+		return List.of(new SimpleGrantedAuthority(authorities.getAlName()));
 	}
 
 	@Override

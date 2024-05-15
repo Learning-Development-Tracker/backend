@@ -45,4 +45,10 @@ public class LdTrackerConstants {
 	public static final Integer MIN_PASSWORD_LENGTH = 8;
 	public static final Integer MAX_PASSWORD_LENGTH = 32;
 	
+	//Access level
+	public static final String ADMIN = "Admin";
+	public static final String USER = "User";
+	public static final String APPROVER = "Approver";
+
+	
 }

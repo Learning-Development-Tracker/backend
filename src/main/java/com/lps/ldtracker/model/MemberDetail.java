@@ -4,16 +4,17 @@ import java.util.Date;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Parameter;
 
-import jakarta.persistence.CascadeType;
+import com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,19 +30,22 @@ import lombok.NoArgsConstructor;
 public class MemberDetail {
 
 	@Id
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberdtl")
-//	@SequenceGenerator(sequenceName = "seq_member_dtl", allocationSize = 1, name = "memberdtl")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_member_dtl")
+    @GenericGenerator(
+        name = "seq_member_dtl", 
+        strategy = "com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator", 
+        parameters = {
+            @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "LPS2024"),
+            @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d") })
 	@Column(name = "member_id")
-//	private Integer memberDetailId;
 	private String memberDetailId;
 	@NaturalId(mutable=true)
 	private String firstName;
 	private String lastName;
 	private Integer employeeNum;
 	private String emailAddress;
-	private boolean isDeleted=false;
+	private Boolean isDeleted;
 	private Date employmentDt;
 	private String regionId;
 	private String careerLevelId;
@@ -51,7 +55,4 @@ public class MemberDetail {
 	private String createdDate;
 	private String updatedBy;
 	private String updatedDate;
-	@OneToOne(mappedBy = "memberDtl", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-	private UserDtl user;
 }
