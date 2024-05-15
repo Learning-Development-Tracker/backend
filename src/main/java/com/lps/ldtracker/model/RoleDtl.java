@@ -2,6 +2,7 @@ package com.lps.ldtracker.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class RoleDtl {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roledtl")
 	@SequenceGenerator(sequenceName = "seq_role_dtl", allocationSize = 1, name = "roledtl")
+	@Column(name = "role_id")
 	private String roleId;
 	private Integer active;
 	private String roleName;
@@ -33,5 +35,4 @@ public class RoleDtl {
 	private LocalDateTime createdDate;
 	private String updatedBy;
 	private LocalDateTime updatedDate;
-	
 }
