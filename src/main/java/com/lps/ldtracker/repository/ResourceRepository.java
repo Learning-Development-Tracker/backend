@@ -11,4 +11,5 @@ import com.lps.ldtracker.model.UserT;
 
 public interface ResourceRepository extends JpaRepository<Resource, Long>{
 	Optional<Resource> findByEmailAddress(String email);
+	Optional<Resource> findTopByOrderByMemberIdDesc();
 }

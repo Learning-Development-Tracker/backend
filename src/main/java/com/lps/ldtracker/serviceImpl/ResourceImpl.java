@@ -1,6 +1,7 @@
 package com.lps.ldtracker.serviceImpl;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -60,6 +61,7 @@ public class ResourceImpl implements ResourceService{
 		try {
 			Result result = new Result();
 			Optional <Resource>_resource = this.findByEmailAddress(resourceDto.getEmailAddress());
+			Optional <Resource> lastResource = resourceRepository.findTopByOrderByMemberIdDesc();
 			
 			if (_resource.isPresent()) {
 				result.setMessage(LdTrackerConstants.USER_ALREADY_EXISTS);
@@ -67,8 +69,17 @@ public class ResourceImpl implements ResourceService{
 				return result;
 			}
 			
+			long newMemberIdNumericPart = 1; // Default value if no previous record exists
+	        if (lastResource.isPresent()) {
+	            String lastMemberId = lastResource.get().getMemberId();
+	            String numericPart = lastMemberId.substring(3); // Assuming the prefix length is fixed
+	            newMemberIdNumericPart = Long.parseLong(numericPart) + 1;
+	        }
+	        
+	        String newMemberId = "LPS" + String.format("%013d", newMemberIdNumericPart);
+			
 			String generatedPassword = passwordEncoder.encode(ResourceImpl.generatePassword());
-			Resource resource = ResourceMapper.resourceMapper(resourceDto, generatedPassword);
+			Resource resource = ResourceMapper.resourceMapper(resourceDto, generatedPassword, newMemberId);
 			Resource saveResource = resourceRepository.save(resource);
 			
 			result.setData(ResourceMapper.resourceMapperDto(saveResource));
@@ -84,9 +95,40 @@ public class ResourceImpl implements ResourceService{
 
 
 	@Override
-	public Result editResource(ResourceDto resourceDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result editResource(Long id, ResourceDto resourceDto) {
+		Result result = new Result();
+        Optional<Resource> resourceOptional = resourceRepository.findById(id);
+
+        if (resourceOptional.isPresent()) {
+            Resource resource = resourceOptional.get();
+
+            // Update the resource fields with the DTO values
+            resource.setLastname(resourceDto.getLastname());
+            resource.setFirstname(resourceDto.getFirstname());
+            resource.setMiddlename(resourceDto.getMiddlename());
+            resource.setSuffix(resourceDto.getSuffix());
+            resource.setGender(resourceDto.getGender());
+            resource.setEmpId(resourceDto.getEmpId());
+            resource.setEmailAddress(resourceDto.getEmailAddress());
+            resource.setCareerStep(resourceDto.getCareerStep());
+            resource.setRegion(resourceDto.getRegion());
+            resource.setIsEnabled(resourceDto.getIsEnabled());
+            resource.setTeam(resourceDto.getTeam());
+            resource.setRole(resourceDto.getRole());
+//            resource.setStatus(resourceDto.getStatus());
+            resource.setSkills(resourceDto.getSkills());
+            
+            Resource updatedResource = resourceRepository.save(resource);
+
+            result.setData(ResourceMapper.resourceMapperDto(updatedResource));
+            result.setMessage("Resource updated successfully.");
+            result.setStatus("SUCCESS");
+        } else {
+            result.setMessage("Resource not found.");
+            result.setStatus("ERROR");
+        }
+
+        return result;
 	}
 
 	@Override
@@ -110,6 +152,13 @@ public class ResourceImpl implements ResourceService{
 		}
 		
 	}
+	
+	public List<ResourceDto> getAllResources() {
+      
+        return resourceRepository.findAll().stream()
+            .map(ResourceMapper::resourceMapperDto)
+            .collect(Collectors.toList());
+    }
 	
 	
 }

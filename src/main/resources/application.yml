@@ -1,41 +1,33 @@
 spring:
-    # datasource:
-    #     url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-    #     username: ltddbadmin
-    #     password: ltdadmin@1
-    # jpa:
-    #     show-sql: true
-    #     hibernate:
-    #     ddl-auto: update
-    #     dialect: org.hibernate.dialect.SQLServer2012Dialect
-    #     namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
-#-----H2 set up do not include in commits---------
-      h2:
-          console.enabled: true
-      datasource:
-          url: jdbc:h2:file:C:/Users/Spencer/test;AUTO_SERVER=TRUE
-          username: sa
-          password: password
-          driverClassName: org.h2.Driver
-      jpa:
-          database-platform: org.hibernate.dialect.H2Dialect
-      mail:
+    datasource:
+        #url: jdbc:sqlserver://192.168.10.80:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
+        #username: LPS
+        #password: p@ssw0rd
+        url: jdbc:sqlserver://127.0.0.1:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
+        username: LPS
+        password: LPS
+    jpa:
+        show-sql: true
+        hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    mail:
         host: smtp.gmail.com
         port: 587
         username: lpshris1@gmail.com
         password: xcmhecferfilhhmi
         properties:
-          mail: 
-          smtp: 
-              auth: true
-              starttls:
-                enable: true
+            mail:
+            smtp:
+                #auth: true
+                starttls:
+                #enable: true
 upload:
     files:
         #path: D:\\tmp\\uploads\\files
         # path: /Users/theara/project/dev.io/rean-spring-framework/multiple-file-upload/src/main/resources/
         path: C:/temp/files/
         extensions: jpg, jpeg, png, gif
-server: 
+server:
   port: 80

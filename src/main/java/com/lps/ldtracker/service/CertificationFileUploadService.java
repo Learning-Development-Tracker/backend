@@ -104,8 +104,8 @@ public class CertificationFileUploadService {
 						throw new IllegalArgumentException("Invalid file extension");
 					}
 					
-				  byte[] bytes = file.getBytes();
-				  Files.write(Paths.get(uploadPath + file.getOriginalFilename()), bytes);
+				  byte[] fileContent = file.getBytes();
+				  Files.write(Paths.get(uploadPath + file.getOriginalFilename()), fileContent);
 					
 				  String fileNameUpload = FilenameUtils.removeExtension(filename) + "_" + Calendar.getInstance().getTimeInMillis() + "." + getFileExtension(filename);
 					
@@ -120,6 +120,7 @@ public class CertificationFileUploadService {
 				  certificationFileUpload.setFullPath(uploadPath + filename);
 				  certificationFileUpload.setFileSize(file.getSize());
 				  certificationFileUpload.setChannelCode(headers.get("channelCode"));
+				  certificationFileUpload.setFileContent(fileContent);
 				  certificationFileUploads.add(certificationFileUpload);	
 				
 				} catch(IOException e) {

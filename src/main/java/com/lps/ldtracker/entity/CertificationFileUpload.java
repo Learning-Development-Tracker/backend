@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -18,7 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "certification_dtl")
+@Table(name = "certification_file_dtl")
 @NoArgsConstructor
 @AllArgsConstructor 
 @Data
@@ -26,9 +27,9 @@ import lombok.NoArgsConstructor;
 public class CertificationFileUpload implements Serializable{
 	 private static final long serialVersionUID = -9082333384269286004L;
 
-	    @Id
-	    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "certification_dtl")
-		@SequenceGenerator(sequenceName = "certification_dtl_seq", allocationSize = 1, name = "certification_dtl")
+	 	@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    @Column(name = "id")
 	    private Long id;
 	    
 	    @Column(name= "certification_name")
@@ -60,6 +61,10 @@ public class CertificationFileUpload implements Serializable{
 
 	    private boolean status;
 
-	    @Column(name = "created_on")
+	    @Column(name = "created_date")
 	    private LocalDateTime localDateTime = LocalDateTime.now();
+	    
+	    @Column(name = "file_content")
+	    @Lob
+	    private byte[] fileContent;
 }

@@ -4,47 +4,45 @@ import com.lps.ldtracker.dto.ResourceDto;
 import com.lps.ldtracker.entity.Resource;
 
 public class ResourceMapper {
-	public static Resource resourceMapper(ResourceDto resourceDto, String generatedPassword) {
+	public static Resource resourceMapper(ResourceDto resourceDto, String generatedPassword, String newMemberId) {
 		return new Resource(
-					resourceDto.getId(),
-					resourceDto.getLastname(),
+					newMemberId,
 					resourceDto.getFirstname(),
+					resourceDto.getLastname(),
 					resourceDto.getMiddlename(),
 					resourceDto.getSuffix(),
 					resourceDto.getGender(),
-					resourceDto.getEmailAddress(),
-					generatedPassword,
-					resourceDto.getCareerStep(),
 					resourceDto.getEmpId(),
+					resourceDto.getEmailAddress(),
 					resourceDto.getRegion(),
+					resourceDto.getIsEnabled(),
+					resourceDto.getCareerStep(),
 					resourceDto.getTeam(),
-					resourceDto.getStatus(),
-					resourceDto.getSkills(),
-					false,
+//					resourceDto.getStatus(),
+					generatedPassword,
 					resourceDto.getRole(),
-					resourceDto.getCertifications()
+					resourceDto.getSkills()
 				);
 	}
 	
 	public static ResourceDto resourceMapperDto(Resource resource) {
 		return new ResourceDto(
-					resource.getId(),
-					resource.getLastname(),
+					resource.getMemberId(),
 					resource.getFirstname(),
+					resource.getLastname(),
 					resource.getMiddlename(),
 					resource.getSuffix(),
 					resource.getGender(),
-					resource.getEmailAddress(),
-					resource.getPassword(),
-					resource.getCareerStep(),
 					resource.getEmpId(),
+					resource.getEmailAddress(),
 					resource.getRegion(),
+					resource.isEnabled(),
+					resource.getCareerStep(),
 					resource.getTeam(),
-					resource.getStatus(),
-					resource.getSkills(),
-					resource.getIsEnabled(),
+//					resource.getStatus(),
+					resource.getPassword(),
 					resource.getRole(),
-					resource.getCertifications()
+					resource.getSkills()
 				);
 	}
 }
