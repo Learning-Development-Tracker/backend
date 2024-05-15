@@ -12,38 +12,33 @@ import org.hibernate.procedure.ProcedureCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
-import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.lps.ldtracker.configuration.RealSessionAware;
 
+import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.constants.LdTrackerConstants;
+import com.lps.ldtracker.model.AccessLevel;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.MemberDetail;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
-import com.lps.ldtracker.model.StatusDetail;
 import com.lps.ldtracker.model.UserDetail;
 import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.model.ValidationParamCollection;
+import com.lps.ldtracker.repository.AccessLevelRepository;
 import com.lps.ldtracker.repository.MemberDtlRepository;
-import com.lps.ldtracker.repository.StatusDtlRepository;
 import com.lps.ldtracker.repository.UserDtlRepository;
 import com.lps.ldtracker.repository.VerificationTokenRepository;
-import com.lps.ldtracker.security.RoleSecurity;
 import com.lps.ldtracker.security.UserRegistrationDetails;
 import com.lps.ldtracker.security.VerificationToken;
 import com.lps.ldtracker.service.JwtService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.UserDtlService;
-
 
 import jakarta.persistence.ParameterMode;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +47,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, RealSessionAware{
 	private static final Logger logger =   LoggerFactory.getLogger(UserDtlServiceImpl.class);
-
 	
 	private final UserDtlRepository userDtlRepository;
 	
 	private final MemberDtlRepository memberDtlRepository;
 	
-	private final StatusDtlRepository statusDtlRepository;
+	private final AccessLevelRepository accessLevelRepository;
 	
 	private final PasswordEncoder passwordEncoder;
 	
@@ -96,9 +90,8 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			} else {
-				StatusDetail statDtl = statusDtlRepository
-						.findAll().stream().findFirst()
-						.orElseThrow(() -> new NotFoundException());
+				AccessLevel accLevel = accessLevelRepository.findByAlName(LdTrackerConstants.USER)
+						.orElse(null);
 				var memberBuilder = MemberDetail.builder()
 						.firstName(request.firstName())
 						.lastName(request.lastName())
@@ -106,11 +99,11 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 						.emailAddress(request.email())
 						.careerLevelId("").teamId("")
 						.statusId("").build();
-				MemberDetail mbrDtl = memberDtlRepository.save(memberBuilder);
+				memberDtlRepository.save(memberBuilder);
 				var userBuilder = UserDtl.builder()
 						.userName(request.username())
 						.userPass(passwordEncoder.encode(request.password()))
-						.statusDtl(statDtl).memberDtl(mbrDtl).role(RoleSecurity.ADMIN)
+						.accessLevel(accLevel)
 						.isActive(1).isDeleted(0)
 						.createdDate(LocalDateTime.now()).build();
 				userDtlRepository.save(userBuilder);						

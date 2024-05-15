@@ -66,6 +66,7 @@ public class AuthenticationController {
 						.createdDate(userDtl2.getCreatedDate())
 						.updatedBy(userDtl2.getUpdatedBy())
 						.updatedDate(userDtl2.getUpdatedDate())
+						.accessName(userDtl2.getAccessLevel().getAlName())
 						.build();
 				result.setData(loginData);
 				result.setMessage(LdTrackerConstants.AUTH_SUCCESS);
