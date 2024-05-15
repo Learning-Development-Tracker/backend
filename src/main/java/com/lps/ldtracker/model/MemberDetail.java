@@ -2,6 +2,7 @@ package com.lps.ldtracker.model;
 
 import java.util.Date;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import jakarta.persistence.CascadeType;
@@ -28,10 +29,13 @@ import lombok.NoArgsConstructor;
 public class MemberDetail {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberdtl")
-	@SequenceGenerator(sequenceName = "seq_member_dtl", allocationSize = 1, name = "memberdtl")
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberdtl")
+//	@SequenceGenerator(sequenceName = "seq_member_dtl", allocationSize = 1, name = "memberdtl")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
 	@Column(name = "member_id")
-	private Integer memberDetailId;
+//	private Integer memberDetailId;
+	private String memberDetailId;
 	@NaturalId(mutable=true)
 	private String firstName;
 	private String lastName;
