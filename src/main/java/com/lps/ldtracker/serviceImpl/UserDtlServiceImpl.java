@@ -64,22 +64,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	private final ErrorHandlingService errorService;
 	
 	private final ResultService resultService;
-	private static final String SP_GETUSERINFO = "sp_getUserInfo";
-	private static final String ERROR_REGISTER = "ERROR registerUser:";
-	private static final String ERROR_RESET = "ERROR resetPassword:";
-	private static final String ERROR_FETCH = "Error occurred while fetching user details:";
-	private static final String MEMBERID = "MemberID";
-	private static final String ADDRESS = "Address";
-	private static final String EMAIL = "Email";
-	private static final String USER_NAME = "User Name";
-	private static final String PASSWORD = "Password";
-	private static final String FIRST_NAME = "First Name";
-	private static final String LAST_NAME = "Last Name";
-	private static final String PHONE_NUMBER = "Phone number";
-	private static final String POSITION = "Position";
-	private static final String POSITION_CODE = "Position Code";
-	private static final String ROLE = "Role";
-	private static final Integer BAD_REQUEST = HttpStatus.BAD_REQUEST.value();
+
 	@Autowired
 	SessionFactory sessionFactory;
 	
@@ -97,7 +82,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 
 			this.validateRegisterInputs(request, errors);
 			if (!errors.isEmpty()) {
-				result = resultService.setResult(String.valueOf(BAD_REQUEST), LdTrackerConstants.ERROR_OCCURED, errors, null);
+				result = resultService.setResult(String.valueOf(LdTrackerConstants.BAD_REQUEST), LdTrackerConstants.ERROR_OCCURED, errors, null);
 				return result;
 			}
 
@@ -133,7 +118,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(ERROR_REGISTER + e.getMessage());
+			logger.error(LdTrackerConstants.ERROR_REGISTER + e.getMessage());
 
 		}
 		return result;
@@ -152,7 +137,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 		Boolean uDtl = userDtlRepository.existsByUserName(request.getUsername());
 		this.validateUsernameInput(request, errors);
 		if (!errors.isEmpty()) {
-			result = resultService.setResult(String.valueOf(BAD_REQUEST), LdTrackerConstants.ERROR, errors, null);
+			result = resultService.setResult(String.valueOf(LdTrackerConstants.BAD_REQUEST), LdTrackerConstants.ERROR, errors, null);
 			return result;
 		}
 		if(uDtl) {
@@ -184,10 +169,10 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	        errorService.validateEmptyInputs(tuple.getFirst(), tuple.getSecond(), tuple.getThird(), errors);
 	    }
 	    // Additional specific validations
-	    errorService.validateEmail(param.email(), EMAIL, LdTrackerConstants.INVALID_EMAIL, errors);
+	    errorService.validateEmail(param.email(), LdTrackerConstants.EMAIL, LdTrackerConstants.INVALID_EMAIL, errors);
 	    if(null != param.phoneNo() && !param.phoneNo().isEmpty()) {
-	    	errorService.validateCharLength(param.phoneNo(), PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO, 11, errors);
-		    errorService.validatePhoneNumber(param.phoneNo(), PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO, errors);
+	    	errorService.validateCharLength(param.phoneNo(), LdTrackerConstants.PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO, 11, errors);
+		    errorService.validatePhoneNumber(param.phoneNo(), LdTrackerConstants.PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO, errors);
 	    }
 	    
 	}
@@ -200,16 +185,16 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	
 	private List<ValidationParamCollection<String, String, String>> getValidationParams(RegistrationRequest param) {
 		List<ValidationParamCollection<String, String, String>> validationTuples = new ArrayList<>();
-		validationTuples.add(new ValidationParamCollection<>(param.address(), ADDRESS, LdTrackerConstants.INVALID_ADDRESS));
-	    validationTuples.add(new ValidationParamCollection<>(param.email(), EMAIL, LdTrackerConstants.INVALID_EMAIL));
-	    validationTuples.add(new ValidationParamCollection<>(param.username(), USER_NAME, LdTrackerConstants.INVALID_USERNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.password(), PASSWORD, LdTrackerConstants.INVALID_PASSWORD));
-	    validationTuples.add(new ValidationParamCollection<>(param.firstName(), FIRST_NAME, LdTrackerConstants.INVALID_FIRSTNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.lastName(), LAST_NAME, LdTrackerConstants.INVALID_LASTNAME));
-	    validationTuples.add(new ValidationParamCollection<>(param.phoneNo(), PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO));
-	    validationTuples.add(new ValidationParamCollection<>(param.position(), POSITION, LdTrackerConstants.INVALID_POSITION));
-	    validationTuples.add(new ValidationParamCollection<>(param.positionCode(), POSITION_CODE, LdTrackerConstants.INVALID_POSITION_CODE));
-	    validationTuples.add(new ValidationParamCollection<>(String.valueOf(param.role()), ROLE, LdTrackerConstants.INVALID_ROLE));
+		validationTuples.add(new ValidationParamCollection<>(param.address(), LdTrackerConstants.ADDRESS, LdTrackerConstants.INVALID_ADDRESS));
+	    validationTuples.add(new ValidationParamCollection<>(param.email(), LdTrackerConstants.EMAIL, LdTrackerConstants.INVALID_EMAIL));
+	    validationTuples.add(new ValidationParamCollection<>(param.username(), LdTrackerConstants.USER_NAME, LdTrackerConstants.INVALID_USERNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.password(), LdTrackerConstants.PASSWORD, LdTrackerConstants.INVALID_PASSWORD));
+	    validationTuples.add(new ValidationParamCollection<>(param.firstName(), LdTrackerConstants.FIRST_NAME, LdTrackerConstants.INVALID_FIRSTNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.lastName(), LdTrackerConstants.LAST_NAME, LdTrackerConstants.INVALID_LASTNAME));
+	    validationTuples.add(new ValidationParamCollection<>(param.phoneNo(), LdTrackerConstants.PHONE_NUMBER, LdTrackerConstants.INVALID_PHONE_NO));
+	    validationTuples.add(new ValidationParamCollection<>(param.position(), LdTrackerConstants.POSITION, LdTrackerConstants.INVALID_POSITION));
+	    validationTuples.add(new ValidationParamCollection<>(param.positionCode(), LdTrackerConstants.POSITION_CODE, LdTrackerConstants.INVALID_POSITION_CODE));
+	    validationTuples.add(new ValidationParamCollection<>(String.valueOf(param.role()), LdTrackerConstants.ROLE, LdTrackerConstants.INVALID_ROLE));
 
 		return validationTuples;
 	}
@@ -244,7 +229,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 					return result;
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.error(ERROR_RESET + e.getMessage());
+					logger.error(LdTrackerConstants.ERROR_RESET + e.getMessage());
 				}
 			}
 
@@ -258,9 +243,9 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	    List<UserDetail> resList = new ArrayList<UserDetail>();
 	    try  {
 	    		Session session = getRealSession(sessionFactory);
-	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
-	            storedProcedureCall.registerStoredProcedureParameter(MEMBERID, String.class, ParameterMode.IN);
-	            storedProcedureCall.setParameter(MEMBERID, id);
+	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(LdTrackerConstants.SP_GETUSERINFO);
+	            storedProcedureCall.registerStoredProcedureParameter(LdTrackerConstants.MEMBERID, String.class, ParameterMode.IN);
+	            storedProcedureCall.setParameter(LdTrackerConstants.MEMBERID, id);
 	            List<Object[]> recordList = storedProcedureCall.getResultList();
 	                recordList.forEach(result -> {
 	                    UserDetail res = new UserDetail();
@@ -283,7 +268,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	                });
 	        
 	    } catch (Exception e) {
-	        logger.error(ERROR_FETCH + e.getMessage(), e);
+	        logger.error(LdTrackerConstants.ERROR_FETCH + e.getMessage(), e);
 	    }
 	    return resList;
 	}
