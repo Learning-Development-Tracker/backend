@@ -33,8 +33,6 @@ public class SecurityConfiguration {
 		"/api/health",
 		"/api/v1/authentication/**",
 		"/api/v1/forgot-password/**",
-		"api/v1/admin/**",
-		"/api/v1/resources/**",
  		"/actuator/**"
     };
 	
@@ -44,12 +42,15 @@ public class SecurityConfiguration {
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+			    httpSecurityHeadersConfigurer.frameOptions().sameOrigin();
 			}) 
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)
 				.permitAll()
-				.requestMatchers("/api/v1/admin/**")
-				.hasAnyRole(ADMIN.name(), USER.name())
+				.requestMatchers("/api/v1/resources/**")
+				.hasAnyAuthority(ADMIN.name(), USER.name())
+				.requestMatchers("/api/v1/trainings/**")
+				.hasAnyAuthority(ADMIN.name(), USER.name())
 				.requestMatchers(GET, "/api/v1/admin/**")
 				.hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
                 .requestMatchers(POST, "/api/v1/admin/**")

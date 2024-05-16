@@ -1,5 +1,10 @@
 package com.lps.ldtracker.configuration;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,10 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.repository.UserDtlRepository;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
 	
@@ -52,6 +59,37 @@ public class ApplicationConfiguration {
     @Bean
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();
+    }
+    
+    @ConfigurationProperties("app.datasource")
+    public HikariDataSource dataSource() throws SQLException {
+    	HikariConfig config = new HikariConfig();
+    	 // Connection pool properties 
+        config.setConnectionTimeout(20000); // 20 seconds in milliseconds 
+        config.setMaximumPoolSize(10);  // Maximum number of connections in the pool 
+        config.setMinimumIdle(5);        // Minimum number of idle connections in the pool 
+        config.setIdleTimeout(60000);      // Maximum time a connection can remain idle in the pool (60 seconds) 
+        config.setMaxLifetime(1800000);     // Maximum lifetime of a connection in the pool (30 minutes) 
+        config.setKeepaliveTime(600000);    // Keepalive time in milliseconds (10 minutes) 
+        config.setConnectionTestQuery("SELECT 1"); // Connection test query 
+        config.setPoolName("MyPool");       // Pool name 
+        config.setIdleTimeout(300000); // 5 minutes 
+  
+        HikariDataSource dataSource = new HikariDataSource(config); 
+  
+        // Creating connection with the pool 
+        try (Connection connection = dataSource.getConnection())  
+        { 
+            System.out.println("Connected to database!"); 
+  
+        } catch (SQLException e) { 
+            // In case of failed Connection 
+            e.printStackTrace(); 
+        } finally { 
+            // Close the DataSource when done 
+            dataSource.close(); 
+        } 
+    	return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
 }
