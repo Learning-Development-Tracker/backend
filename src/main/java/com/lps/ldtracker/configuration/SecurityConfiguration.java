@@ -33,8 +33,9 @@ public class SecurityConfiguration {
 		"/api/health",
 		"/api/v1/authentication/**",
 		"/api/v1/forgot-password/**",
-		"api/v1/admin/**"
-//		"/h2-console/**"
+		"api/v1/admin/**",
+		"/api/v1/resources/**",
+ 		"/actuator/**"
     };
 	
 	@Bean
@@ -43,7 +44,6 @@ public class SecurityConfiguration {
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
-			    httpSecurityHeadersConfigurer.frameOptions().sameOrigin();
 			}) 
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)
@@ -68,4 +68,6 @@ public class SecurityConfiguration {
 			.addFilterBefore(jwtAuthenticationFilterConfiguration, UsernamePasswordAuthenticationFilter.class);
 		return httpSecurity.build();
 	}
+	
+	
 }
