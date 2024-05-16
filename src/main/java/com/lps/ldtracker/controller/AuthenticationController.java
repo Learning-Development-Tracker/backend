@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -47,7 +48,7 @@ public class AuthenticationController {
 	@PostMapping(value="/login")
 	public ResponseEntity<Result> login(
 		@RequestBody LoginRequest loginRequest
-	) {
+	) throws JsonProcessingException {
 		Result result = new Result();
 		String userName = loginRequest.getUsername();
 		Optional<UserDtl> userDtl = this.userDtlService.findByUserName(userName);
