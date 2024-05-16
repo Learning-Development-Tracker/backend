@@ -1,5 +1,7 @@
 package com.lps.ldtracker.constants;
 
+import org.springframework.http.HttpStatus;
+
 public class LdTrackerConstants {
 	
 	//Ld Errors
@@ -18,6 +20,24 @@ public class LdTrackerConstants {
 	public static final String INVALID_ROLE= "INVALID_ROLE";
 	public static final String ERROR_OCCURED = "ERROR_OCCURED";
 	
+	//validation params
+	public static final String ADDRESS = "Address";
+	public static final String EMAIL = "Email";
+	public static final String USER_NAME = "User Name";
+	public static final String PASSWORD = "Password";
+	public static final String FIRST_NAME = "First Name";
+	public static final String LAST_NAME = "Last Name";
+	public static final String PHONE_NUMBER = "Phone number";
+	public static final String POSITION = "Position";
+	public static final String POSITION_CODE = "Position Code";
+	public static final String ROLE = "Role";
+	
+	//response and catch errors
+	public static final String ERROR_REGISTER = "ERROR registerUser:";
+	public static final String ERROR_RESET = "ERROR resetPassword:";
+	public static final String ERROR_FETCH = "Error occurred while fetching user details:";
+	public static final Integer BAD_REQUEST = HttpStatus.BAD_REQUEST.value();
+
 	public static final String USER_ALREADY_EXISTS = "User already exists.";
 	public static final String ERROR = "error";
 	public static final String SUCCESS = "success";
@@ -49,6 +69,9 @@ public class LdTrackerConstants {
 	public static final String ADMIN = "Admin";
 	public static final String USER = "User";
 	public static final String APPROVER = "Approver";
-
+	
+	//Stored proc params
+	public static final String SP_GETUSERINFO = "sp_getUserInfo";
+	public static final String MEMBERID = "MemberID";
 	
 }
