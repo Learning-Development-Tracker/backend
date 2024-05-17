@@ -84,7 +84,7 @@ public class UserDtl implements UserDetails{
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(accessLevel.getAlName()));
+		return List.of(new SimpleGrantedAuthority(accessLevel.getAlName().toUpperCase()));
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class UserRegistrationDetails implements UserDetails {
 	}
 	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(authorities.getAlName()));
+		return List.of(new SimpleGrantedAuthority(authorities.getAlName().toUpperCase()));
 	}
 
 	@Override
