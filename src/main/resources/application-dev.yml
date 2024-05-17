@@ -9,10 +9,5 @@ spring:
         ddl-auto: update
         dialect: org.hibernate.dialect.SQLServer2012Dialect
         namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-logging:
-   level:
-      com:
-         zaxxer:
-            hikari: TRACE
 server: 
   port: 80
