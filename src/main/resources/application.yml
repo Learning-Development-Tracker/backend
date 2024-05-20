@@ -35,3 +35,11 @@ spring:
             enable: true
 server:
   port: 80
+management:
+  server:
+    endpoint:
+      shutdown: 
+      enabled: true
+      web:
+      exposure:
+        include: "*"
