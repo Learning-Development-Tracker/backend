@@ -1,4 +1,6 @@
 spring:
+    # profiles:
+    #     active: dev
     datasource:
         #url: jdbc:sqlserver://192.168.10.80:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
         #username: LPS
@@ -29,5 +31,12 @@ upload:
         # path: /Users/theara/project/dev.io/rean-spring-framework/multiple-file-upload/src/main/resources/
         path: C:/temp/files/
         extensions: jpg, jpeg, png, gif
+servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 2000MB
+
 server:
   port: 80
+  tomcat:
+    max-swallow-size: 1000MB

@@ -9,5 +9,6 @@ import com.lps.ldtracker.model.Training_Dtl;
 
 public interface TrainingRepository extends JpaRepository<Training_Dtl, Integer> {
 
-//	Optional<Training_Dtl> findByUserTraining(String email);
+	Optional<Training_Dtl> findById(Integer Id);
+
 }

@@ -3,7 +3,7 @@ package com.lps.ldtracker.security;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.lps.ldtracker.model.UserT;
+import com.lps.ldtracker.model.UserDtl;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,9 +34,9 @@ public class VerificationToken {
 	private static final int EXPIRATION_TIME=15;
 	@OneToOne
 	@JoinColumn(name="id")
-	private UserT user;
+	private UserDtl user;
 	
-	public VerificationToken(UserT user,String token) {
+	public VerificationToken(UserDtl user,String token) {
 		super();
 		this.token = token;
 		this.user = user;

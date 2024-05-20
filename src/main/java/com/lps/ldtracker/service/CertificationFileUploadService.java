@@ -169,4 +169,93 @@ public class CertificationFileUploadService {
 		}
 		
 	}
+	
+	
+	public List<CertificationFileUploadDto> updateCertifications(MultipartFile[] uploadingFiles, Map<String, String> headers) {
+	    if (uploadingFiles == null) {
+	        log.error("Invalid file upload");
+	        throw new IllegalArgumentException("Invalid file");
+	    }
+
+	    List<CertificationFileUploadDto> updatedFiles = new ArrayList<>();
+	    
+	    for (int i = 0; i < uploadingFiles.length; i++) {
+		      String nameKey = "name_" + i; // Construct key for name
+		      String calendarKey = "calendar_" + i; // Construct key for calendar
+		      String ownerKey = "owner";
+		      String idKey= "id_" + i;
+
+		      String name = headers.get(nameKey); // Extract the name
+		      String calendar = headers.get(calendarKey); // Extract the calendar
+		      String certificationOwner = headers.get(ownerKey);
+		      String certificationId = headers.get(idKey);
+
+		      System.out.println("Name for item " + i + ": " + name);
+		      System.out.println("Calendar for item " + i + ": " + calendar);
+		      System.out.println("Owner for item " + i + ": " + certificationOwner);
+		      System.out.println("certificationId for item " + i + ": " + certificationId);
+
+		      MultipartFile file = uploadingFiles[i]; // Access the corresponding file
+		      if (file != null) {
+		        System.out.println("File " + i + ": " + file.getOriginalFilename());
+		      }
+		}
+
+	    for (int i = 0; i < uploadingFiles.length; i++) {
+	        try {
+	            String nameKey = "name_" + i;
+	            String calendarKey = "calendar_" + i;
+	            String ownerKey = "owner";
+	            String idKey= "id_" + i;
+
+	            String certificationName = headers.get(nameKey);
+	            String certificationCalendar = headers.get(calendarKey);
+	            String certificationOwner = headers.get(ownerKey);
+	            String certificationId = headers.get(idKey);
+	            Long certificationIdInt = Long.parseLong(certificationId);
+
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	            Date newCertificationCalendar = dateFormat.parse(certificationCalendar);
+
+	            MultipartFile file = uploadingFiles[i];
+	            if (file != null) {
+	                String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+	                String fileExtension = getFileExtension(filename);
+
+	                Optional <CertificationFileUpload> existingFile = Optional.of(certificationFileUploadRepository.findByFileName(certificationName));
+	                System.out.println("File existingFile" + i + ": " + existingFile);
+	                System.out.println("File certificationIdInt" + i + ": " + certificationIdInt);
+	                if (existingFile.isPresent()) {
+	                    if (!fileExtensions.contains(fileExtension)) {
+	                        log.error("Invalid File Upload");
+	                        throw new IllegalArgumentException("Invalid file extension");
+	                    }
+	                    CertificationFileUpload _existingFile = existingFile.get();
+
+	                    byte[] fileContent = file.getBytes();
+	                    Files.write(Paths.get(_existingFile.getFullPath()), fileContent);
+	                    System.out.println("File Size" + i + ": " + file.getSize());
+
+	                    _existingFile.setCertificationName(certificationName);
+	                    _existingFile.setCertificationDate(newCertificationCalendar);
+	                    _existingFile.setOwner(certificationOwner);
+	                    _existingFile.setFileSize(file.getSize());
+	                    _existingFile.setFileContent(fileContent);
+
+	                    certificationFileUploadRepository.save(_existingFile);
+
+	                    updatedFiles.add(modelMapper.map(existingFile, CertificationFileUploadDto.class));
+	                } else {
+	                    log.error("File not found: {}", filename);
+	                }
+	            }
+	        } catch (IOException e) {
+	            log.error("Upload file error: {}", e.getMessage());
+	        } catch (ParseException e) {
+	            log.error("Date parsing error: {}", e.getMessage());
+	        }
+	    }
+
+	    return updatedFiles;
+	}
 }

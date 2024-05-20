@@ -95,9 +95,9 @@ public class ResourceImpl implements ResourceService{
 
 
 	@Override
-	public Result editResource(Long id, ResourceDto resourceDto) {
+	public Result editResource(String id, ResourceDto resourceDto) {
 		Result result = new Result();
-        Optional<Resource> resourceOptional = resourceRepository.findById(id);
+        Optional<Resource> resourceOptional = resourceRepository.findByMemberId(id);
 
         if (resourceOptional.isPresent()) {
             Resource resource = resourceOptional.get();
@@ -132,10 +132,10 @@ public class ResourceImpl implements ResourceService{
 	}
 
 	@Override
-	public Result viewResource(Long id) {
+	public Result viewResource(String id) {
 		try {
 			Result result = new Result();
-			Optional <Resource> resource = this.findById(id); 
+			Optional <Resource> resource = resourceRepository.findByMemberId(id); 
 			if (!resource.isPresent()) {
 				result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
 				result.setStatus(LdTrackerConstants.ERROR);

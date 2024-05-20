@@ -12,4 +12,5 @@ import com.lps.ldtracker.entity.Resource;
 @Repository
 public interface CertificationFileUploadRepository extends JpaRepository<CertificationFileUpload, Long>{
 	List<CertificationFileUpload> findByOwner(String owner);
+	CertificationFileUpload findByFileName(String fileName);
 }

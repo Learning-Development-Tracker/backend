@@ -12,8 +12,8 @@ public interface ResourceService {
 
 	Optional<Resource> findByEmailAddress(String emailAddress);
 	
-	Result editResource(Long id, ResourceDto resourceDto);
-	Result viewResource(Long id);
+	Result editResource(String id, ResourceDto resourceDto);
+	Result viewResource(String id);
 	List<ResourceDto> getAllResources();
 
 	Optional<Resource> findById(Long id);
