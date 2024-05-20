@@ -45,6 +45,13 @@ public class LdTrackerConstants {
 	//Email
 	public static final String SUBJECT = "Email Verification";
 	public static final String YOUR_OTP = "Your verification OTP is: ";
+	public static final String ERROR_MAIL_MSG = "Error: sendEmail messaging ";
+	public static final String ERROR_MAIL = "Error: sendEmail ";
+	public static final String EMAIL_TEMPLATE = "emailTemplate";
+	public static final String UTF_8_ENCODING = "UTF-8";
+	public static final String NEW_USER_ACCOUNT_VERIFICATION = "New User Account Verification";
+	public static final String EMAIL_SUFFIX = "@Lenovo.com";	
+	public static final String ACCOUNT_VERIFIED = "Account verified click <a href=\"%1$s\">here</a> to login.";
 	
 	//Forgot PW
 	public static final String USER_DOES_EXISTS = "User found.";
@@ -60,9 +67,9 @@ public class LdTrackerConstants {
 	public static final String REQ_PASSWORD_LENGTH= "Please enter a password between 8 and 32 characters in length";
 	public static final String USER_INCORRECT = "Incorrect username or password";
 	
-	public static final Integer MIN_USERNAME_LENGTH = 8;
+	public static final Integer MIN_USERNAME_LENGTH = 5;
 	public static final Integer MAX_USERNAME_LENGTH = 32;
-	public static final Integer MIN_PASSWORD_LENGTH = 8;
+	public static final Integer MIN_PASSWORD_LENGTH = 5;
 	public static final Integer MAX_PASSWORD_LENGTH = 32;
 	
 	//Access level
@@ -73,5 +80,4 @@ public class LdTrackerConstants {
 	//Stored proc params
 	public static final String SP_GETUSERINFO = "sp_getUserInfo";
 	public static final String MEMBERID = "MemberID";
-	
 }
