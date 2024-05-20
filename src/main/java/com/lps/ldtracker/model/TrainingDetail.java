@@ -2,9 +2,6 @@ package com.lps.ldtracker.model;
 
 import java.sql.Date;
 
-
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,9 +21,6 @@ import lombok.NoArgsConstructor;
 @Builder
 
 public class TrainingDetail {
-
-		private static final long serialVersionUID = 1L;
-		
 		@Id
 		@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trainingdtl")
 		@SequenceGenerator(sequenceName = "trainingdtl_seq", allocationSize = 1, name = "trainingdtl")

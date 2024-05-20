@@ -88,7 +88,7 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
     public Training_Dtl editTraining(Integer Id, Training_Dtl updatedTraining) {
 		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
         if (existingTraining != null) {
-            updatedTraining.setId(Id);
+            updatedTraining.setId(Id.toString());
             return trainingRepository.save(updatedTraining);
         } else {
             return null;
