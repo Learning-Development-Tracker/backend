@@ -131,6 +131,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>lnd-springboot</finalName>
 	</build>
 
 </project>

@@ -1,41 +1,42 @@
 spring:
-    datasource:
-        url: jdbc:sqlserver://192.168.10.87:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
-        username: LPS
-        password: LPS
-    jpa:
-        show-sql: true
-        hibernate:
-        ddl-auto: update
-        dialect: org.hibernate.dialect.SQLServer2012Dialect
-        namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: ltddbadmin
+    password: ltdadmin@1
+  jpa:
+    show-sql: true
+    hibernate:
+    ddl-auto: update
+    dialect: org.hibernate.dialect.SQLServer2012Dialect
+    namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-#-----H2 set up do not include in commits---------
-#     h2:
-#         console.enabled: true
-#     datasource:
-#         url: jdbc:h2:mem:mydb
-#         username: sa
-#         password: password
-#         driverClassName: org.h2.Driver
-#     jpa:
-#         database-platform: org.hibernate.dialect.H2Dialect
-    mail:
-      host: smtp.gmail.com
-      port: 587
-      username: lpshris1@gmail.com
-      password: xcmhecferfilhhmi
-      properties:
-        mail: 
-         smtp: 
-            auth: true
-            starttls:
-              enable: true
-server: 
+  #-----H2 set up do not include in commits---------
+  #     h2:
+  #         console.enabled: true
+  #     datasource:
+  #         url: jdbc:h2:mem:mydb
+  #         username: sa
+  #         password: password
+  #         driverClassName: org.h2.Driver
+  #     jpa:
+  #         database-platform: org.hibernate.dialect.H2Dialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lpshris1@gmail.com
+    password: xcmhecferfilhhmi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+server:
   port: 80
 management:
   server:
-    port: 9191
     endpoint:
       shutdown: 
       enabled: true
