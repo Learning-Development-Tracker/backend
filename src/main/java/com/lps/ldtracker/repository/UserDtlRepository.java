@@ -9,5 +9,6 @@ import com.lps.ldtracker.model.UserDtl;
 
 public interface UserDtlRepository extends JpaRepository<UserDtl, String> {
 	Optional<UserDtl> findByUserName(String username);
+	UserDtl findByUserNameIgnoreCase(String username);
 	Boolean existsByUserName(String username);
 }
