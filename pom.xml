@@ -123,7 +123,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>devops-integration</finalName>
+		<finalName>lnd-springboot</finalName>
 	</build>
 
 </project>
