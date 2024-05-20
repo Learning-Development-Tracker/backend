@@ -53,5 +53,5 @@ public class ApplicationConfiguration {
     public JavaMailSender javaMailSender() {
         return new JavaMailSenderImpl();
     }
-
+    
 }

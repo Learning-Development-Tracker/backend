@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.dto.ResourceDto;
 import com.lps.ldtracker.entity.CertificationFileUpload;
@@ -67,7 +68,7 @@ public class AuthenticationController {
 	@PostMapping(value="/login")
 	public ResponseEntity<Result> login(
 		@RequestBody LoginRequest loginRequest
-	) {
+	) throws JsonProcessingException {
 		Result result = new Result();
 		String userName = loginRequest.getUsername();
 		Optional<UserDtl> userDtl = this.userDtlService.findByUserName(userName);
@@ -86,7 +87,7 @@ public class AuthenticationController {
 						.createdDate(userDtl2.getCreatedDate())
 						.updatedBy(userDtl2.getUpdatedBy())
 						.updatedDate(userDtl2.getUpdatedDate())
-						.accessName(userDtl2.getAccessLevel().getAlName())
+						.accessName(userDtl2.getAccessLevel().getAlName().toUpperCase())
 						.build();
 				result.setData(loginData);
 				result.setMessage(LdTrackerConstants.AUTH_SUCCESS);

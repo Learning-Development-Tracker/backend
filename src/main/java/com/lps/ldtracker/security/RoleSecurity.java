@@ -32,6 +32,14 @@ public enum RoleSecurity {
 			ADMIN_UPDATE,
 			ADMIN_DELETE
 		)
+	),
+	APPROVER(
+		Set.of(
+			APPROVER_READ,
+			APPROVER_CREATE,
+			APPROVER_UPDATE,
+			APPROVER_DELETE
+		)
 	);
 	
 	@Getter

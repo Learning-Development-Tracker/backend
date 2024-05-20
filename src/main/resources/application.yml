@@ -40,3 +40,12 @@ server:
   port: 80
   tomcat:
     max-swallow-size: 1000MB
+management:
+  server:
+    port: 9191
+    endpoint:
+      shutdown: 
+      enabled: true
+      web:
+      exposure:
+        include: "*"
