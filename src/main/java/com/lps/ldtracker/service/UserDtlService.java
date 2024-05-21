@@ -17,4 +17,5 @@ public interface UserDtlService {
 	public List<UserDetail> getUserById(String id);
 	public Result isExistUsername(LoginRequest request);
 	public String verifyToken(String token);
+	public String refreshToken(String username);
 }
