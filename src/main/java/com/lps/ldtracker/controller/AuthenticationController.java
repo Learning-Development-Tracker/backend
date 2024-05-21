@@ -1,4 +1,4 @@
-package com.lps.ldtracker.controller;
+﻿package com.lps.ldtracker.controller;
 
 import static com.lps.ldtracker.constants.LdTrackerConstants.AUTH_SUCCESS;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR;
@@ -31,13 +31,11 @@ import com.lps.ldtracker.service.UserDtlService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/authentication")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
-@Slf4j
 public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
@@ -116,8 +114,11 @@ public class AuthenticationController {
 	@GetMapping
 	public String confirmUserAccount(@RequestParam("verify") String token) {
 		String result = this.userDtlService.verifyToken(token);
-		log.info("return result: {}", result);
 		return result;
 	}
 	
+	@PostMapping(value="/refresh-token")
+	public String getRefreshToken(@RequestBody String request) {
+		return this.userDtlService.refreshToken(request);
+	}
 }

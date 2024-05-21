@@ -16,4 +16,5 @@ public interface UserDtlService {
 	public Result resetPassword(RegistrationRequest request);
 	public Result isExistUsername(LoginRequest request);
 	public String verifyToken(String token);
+	public String refreshToken(String username);
 }

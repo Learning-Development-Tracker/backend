@@ -48,6 +48,10 @@ public class JwtService {
 			.compact();
 	}
 	
+	public String generateRefreshToken(UserDetails userDetails) {
+		return generateRefreshToken(new HashMap<>(), userDetails);
+	}
+	
 	public String generateRefreshToken(
 			Map<String, Object> extraClaims,
 			UserDetails userDetails
