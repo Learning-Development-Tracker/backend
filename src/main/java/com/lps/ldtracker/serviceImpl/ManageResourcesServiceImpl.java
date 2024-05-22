@@ -1,10 +1,10 @@
 package com.lps.ldtracker.serviceImpl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageResourceDto;
 import com.lps.ldtracker.model.ViewTrainingDetail;
-import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageResourcesService;
 
 @Service

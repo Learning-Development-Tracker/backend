@@ -1,7 +1,5 @@
 package com.lps.ldtracker.dto;
 
-import org.hibernate.annotations.NaturalId;
-
 import lombok.Data;
 
 @Data

@@ -1,6 +1,21 @@
 package com.lps.ldtracker.configuration;
 
-import lombok.RequiredArgsConstructor;
+import static com.lps.ldtracker.permission.Permission.ADMIN_CREATE;
+import static com.lps.ldtracker.permission.Permission.ADMIN_DELETE;
+import static com.lps.ldtracker.permission.Permission.ADMIN_READ;
+import static com.lps.ldtracker.permission.Permission.ADMIN_UPDATE;
+import static com.lps.ldtracker.permission.Permission.USER_CREATE;
+import static com.lps.ldtracker.permission.Permission.USER_DELETE;
+import static com.lps.ldtracker.permission.Permission.USER_READ;
+import static com.lps.ldtracker.permission.Permission.USER_UPDATE;
+import static com.lps.ldtracker.security.RoleSecurity.ADMIN;
+import static com.lps.ldtracker.security.RoleSecurity.GUEST;
+import static com.lps.ldtracker.security.RoleSecurity.USER;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +27,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.lps.ldtracker.permission.Permission.*;
-import static com.lps.ldtracker.security.RoleSecurity.*;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -39,6 +48,7 @@ public class SecurityConfiguration {
     };
 	
 	@Bean
+	@SuppressWarnings("removal")
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 		.cors(httpSecurityCorsConfigurer -> {

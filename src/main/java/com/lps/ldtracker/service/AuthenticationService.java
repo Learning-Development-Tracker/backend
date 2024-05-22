@@ -48,7 +48,7 @@ public class AuthenticationService {
 		        throw new AuthenticationFailedException("User not found");
 		    });
 		
-		if (1 > userDtl.getIsActive()) {
+		if (Boolean.FALSE.equals(userDtl.getIsActive())) {
             throw new AuthenticationFailedException("Your account is inactive");
 		}
 		

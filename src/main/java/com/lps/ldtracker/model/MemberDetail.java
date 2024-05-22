@@ -1,9 +1,9 @@
 package com.lps.ldtracker.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Parameter;
 
 import com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator;
@@ -13,8 +13,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +20,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity 
-@Table(name = "member_dtl")
+@Table(name = "MEMBER_DTL")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,41 +28,42 @@ import lombok.NoArgsConstructor;
 public class MemberDetail {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_member_dtl")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_MEMBER_DTL")
     @GenericGenerator(
-        name = "seq_member_dtl", 
+        name = "SEQ_MEMBER_DTL", 
         strategy = "com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator", 
         parameters = {
             @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
             @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "LPS2024"),
             @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d") })
-	@Column(name = "member_id")
+	@Column(name = "MEMBER_ID", length = 36)
 	private String memberDetailId;
-	@NaturalId(mutable=true)
-	@Column(name = "first_name")
+	@Column(name = "FIRST_NAME", nullable = false)
 	private String firstName;
-	@Column(name = "last_name")
+	@Column(name = "LAST_NAME", nullable = false)
 	private String lastName;
-	@Column(name = "employee_num")
+	@Column(name = "EMPLOYEE_NUM", nullable = false)
 	private Integer employeeNum;
-	@Column(name = "email_address")
+	@Column(name = "EMAIL_ADDRESS", length = 100, nullable = false)
 	private String emailAddress;
-	@Column(name = "is_deleted")
+	@Column(name = "IS_DELETED")
 	private Boolean isDeleted;
+	@Column(name = "EMPLOYMENT_DT")
 	private Date employmentDt;
-	@Column(name = "region_id")
+	@Column(name = "REGION_ID", length = 15)
 	private String regionId;
-	@Column(name = "career_level_id")
+	@Column(name = "CAREER_LEVEL_ID", length = 36, nullable = false)
 	private String careerLevelId;
-	@Column(name = "team_id")
+	@Column(name = "TEAM_ID", length = 36, nullable = false)
 	private String teamId;
+	@Column(name = "STATUS_ID", length = 36, nullable = false)
 	private String statusId;
-	@Column(name = "created_by")
+	@Column(name = "CREATED_BY", length = 36)
 	private String createdBy;
-	@Column(name = "created_date")
-	private String createdDate;
-	@Column(name = "updated_by")
+	@Column(name = "CREATED_DATE")
+	private LocalDateTime createdDate;
+	@Column(name = "UPDATED_BY", length = 36)
 	private String updatedBy;
-	@Column(name = "updated_date")
-	private String updatedDate;
+	@Column(name = "UPDATED_DATE")
+	private LocalDateTime updatedDate;
 }

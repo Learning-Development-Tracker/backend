@@ -1,6 +1,16 @@
 package com.lps.ldtracker.controller;
 
+import static com.lps.ldtracker.constants.LdTrackerConstants.AUTH_SUCCESS;
+import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR;
+import static com.lps.ldtracker.constants.LdTrackerConstants.SUCCESS;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.Optional;
+
+import java.util.List;
+import java.util.Map;
 
 import java.util.List;
 import java.util.Map;
@@ -42,10 +52,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@Slf4j
 @RequestMapping("/api/v1/authentication")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
+@Slf4j
 public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
@@ -59,9 +69,9 @@ public class AuthenticationController {
 	public ResponseEntity<Result> registerUser(@RequestBody RegistrationRequest request, final HttpServletRequest httpRequest){
 		Result result = this.userDtlService.registerUser(request);
 		if(null != result.getErrors() && !result.getErrors().isEmpty()) {
-			 return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			 return new ResponseEntity<>(result, BAD_REQUEST);
 		}
-		return  new ResponseEntity<>(result, HttpStatus.OK);
+		return  new ResponseEntity<>(result, OK);
 		
 	}
 	
@@ -90,17 +100,17 @@ public class AuthenticationController {
 						.accessName(userDtl2.getAccessLevel().getAlName().toUpperCase())
 						.build();
 				result.setData(loginData);
-				result.setMessage(LdTrackerConstants.AUTH_SUCCESS);
-				result.setStatus(LdTrackerConstants.SUCCESS);
+				result.setMessage(AUTH_SUCCESS);
+				result.setStatus(SUCCESS);
 			}
 			return ResponseEntity
 					.ok(result);
 		} catch (AuthenticationFailedException authenticationFailedException) {
 			result.setData(null);
 			result.setMessage(authenticationFailedException.getMessage());
-			result.setStatus(LdTrackerConstants.ERROR);
+			result.setStatus(ERROR);
 			return ResponseEntity
-				.status(HttpStatus.FORBIDDEN)	
+				.status(FORBIDDEN)
 				.body(result);
 		}
 	}
@@ -109,9 +119,9 @@ public class AuthenticationController {
 	public ResponseEntity<Result> resetPassword(@RequestBody RegistrationRequest request, final HttpServletRequest httpRequest){
 		Result result = this.userDtlService.resetPassword(request);
 		if(null != result.getErrors() && !result.getErrors().isEmpty()) {
-			 return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			 return new ResponseEntity<>(result, BAD_REQUEST);
 		}
-		return  new ResponseEntity<>(result, HttpStatus.OK);
+		return  new ResponseEntity<>(result, OK);
 		
 	}
 	
@@ -119,9 +129,16 @@ public class AuthenticationController {
 	public ResponseEntity<Result> existingUsername(@RequestBody LoginRequest request) {
 		Result result = this.userDtlService.isExistUsername(request);
 		if(null != result.getErrors() && !result.getErrors().isEmpty()) {
-			 return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			 return new ResponseEntity<>(result, BAD_REQUEST);
 		}
-		return  new ResponseEntity<>(result, HttpStatus.OK);
+		return  new ResponseEntity<>(result, OK);
+	}
+	
+	@GetMapping
+	public String confirmUserAccount(@RequestParam("verify") String token) {
+		String result = this.userDtlService.verifyToken(token);
+		log.info("return result: {}", result);
+		return result;
 	}
 	
 	

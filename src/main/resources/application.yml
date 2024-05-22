@@ -1,51 +1,50 @@
 spring:
-    # profiles:
-    #     active: dev
-    datasource:
-        #url: jdbc:sqlserver://192.168.10.80:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
-        #username: LPS
-        #password: p@ssw0rd
-        url: jdbc:sqlserver://127.0.0.1:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
-        username: LPS
-        password: LPS
-    jpa:
-        show-sql: true
-        hibernate:
-        ddl-auto: update
-        dialect: org.hibernate.dialect.SQLServer2012Dialect
-        namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    mail:
-        host: smtp.gmail.com
-        port: 587
-        username: lpshris1@gmail.com
-        password: xcmhecferfilhhmi
-        properties:
-            mail:
-            smtp:
-                #auth: true
-                starttls:
-                #enable: true
+  profiles:
+    active: dev   
+  datasource:
+    url: jdbc:sqlserver://127.0.0.1:1433;instanceName=MSSQLSERVER;databaseName=LDDBDEV;encrypt=true;trustServerCertificate=true
+    username: LPS
+    password: LPS
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lpshris1@gmail.com
+    password: xcmhecferfilhhmi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 upload:
-    files:
-        #path: D:\\tmp\\uploads\\files
-        # path: /Users/theara/project/dev.io/rean-spring-framework/multiple-file-upload/src/main/resources/
-        path: C:/temp/files/
-        extensions: jpg, jpeg, png, gif
+  files:
+    path: C:/temp/files/
+    extensions: jpg, jpeg, png, gif
+
 servlet:
-    multipart:
-      max-file-size: 1000MB
-      max-request-size: 2000MB
+  multipart:
+    max-file-size: 1000MB
+    max-request-size: 2000MB
 
 server:
   port: 80
   tomcat:
     max-swallow-size: 1000MB
+
 management:
   server:
     port: 9191
     endpoint:
       shutdown: 
-      enabled: true
-      web:
+        enabled: true
+    web:
       exposure:
         include: "*"

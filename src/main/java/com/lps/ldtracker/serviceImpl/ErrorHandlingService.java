@@ -28,7 +28,7 @@ public class ErrorHandlingService {
 	
 	private static final Pattern VALID_PHONE_NO_REGEX = Pattern.compile("\\d+");
 	
-	private static final Pattern VALID_USER_NAME_REGEX = Pattern.compile(".{8,}");
+	private static final Pattern VALID_USER_NAME_REGEX = Pattern.compile(".{6,}");
 
     public ResponseEntity<Result> createErrorResponse(String errorCode, String errorMessage, HttpStatus httpStatus) {
         List<LdTrackerError> errors = new ArrayList<>();
