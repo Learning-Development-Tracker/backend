@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.dto.ManageTrainingDto;
+import com.lps.ldtracker.entity.Training_Dtl;
 import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.Result;
-import com.lps.ldtracker.model.Training_Dtl;
 import com.lps.ldtracker.service.ManageTrainingService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.serviceImpl.ErrorHandlingService;

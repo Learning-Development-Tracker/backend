@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UserDetail;
-import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.service.UserDtlService;
 
 import lombok.RequiredArgsConstructor;

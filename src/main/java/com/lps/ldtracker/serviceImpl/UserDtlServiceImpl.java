@@ -44,15 +44,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
-import com.lps.ldtracker.model.AccessLevel;
+import com.lps.ldtracker.entity.AccessLevel;
+import com.lps.ldtracker.entity.ConfirmationDetail;
+import com.lps.ldtracker.entity.UserDtl;
+import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
-import com.lps.ldtracker.model.ConfirmationDetail;
 import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UserDetail;
-import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.model.ValidationParamCollection;
 import com.lps.ldtracker.repository.AccessLevelRepository;
 import com.lps.ldtracker.repository.ConfirmationRepository;
@@ -291,6 +292,15 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 		user.setIsActive(true);
 		userDtlRepository.save(user);
 		return String.format(ACCOUNT_VERIFIED, redirect);
+	}
+	
+	@Override
+	public String refreshToken(String username) {
+		var userDtl = userDtlRepository.findByUserName(username)
+				.orElseThrow(() -> {
+			        throw new AuthenticationFailedException("User not found");
+			    });
+		return jwtService.generateRefreshToken(userDtl);
 	}
 	
 }

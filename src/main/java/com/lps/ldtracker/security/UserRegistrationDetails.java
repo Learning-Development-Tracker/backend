@@ -7,8 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.lps.ldtracker.model.AccessLevel;
-import com.lps.ldtracker.model.UserDtl;
+import com.lps.ldtracker.entity.AccessLevel;
+import com.lps.ldtracker.entity.UserDtl;
 
 import lombok.Data;
 
