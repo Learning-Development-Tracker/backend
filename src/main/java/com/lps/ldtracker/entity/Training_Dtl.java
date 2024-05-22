@@ -1,4 +1,4 @@
-package com.lps.ldtracker.model;
+package com.lps.ldtracker.entity;
 
 import static com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER;
 import static com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER;

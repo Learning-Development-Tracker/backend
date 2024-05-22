@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.LoginResponse;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
-import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.service.AuthenticationService;
 import com.lps.ldtracker.service.UserDtlService;
 
@@ -121,4 +121,5 @@ public class AuthenticationController {
 	public String getRefreshToken(@RequestBody String request) {
 		return this.userDtlService.refreshToken(request);
 	}
+	
 }

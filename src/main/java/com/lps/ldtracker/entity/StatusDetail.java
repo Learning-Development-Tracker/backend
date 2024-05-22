@@ -1,4 +1,4 @@
-package com.lps.ldtracker.model;
+package com.lps.ldtracker.entity;
 
 import java.time.LocalDateTime;
 
@@ -18,29 +18,33 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity 
-@Table(name = "ACCESS_LEVEL")
 @Data
-@NoArgsConstructor
+@Entity
+@Table(name = "STATUS_DTL")
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class AccessLevel {
+public class StatusDetail {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ACCESS_DTL")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_STATUS_DTL")
     @GenericGenerator(
-        name = "SEQ_ACCESS_DTL", 
+        name = "SEQ_STATUS_DTL", 
         strategy = "com.lps.ldtracker.service.StringPrefixedSequenceIdGenerator", 
         parameters = {
             @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "09-2024"),
+            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "06-2024"),
             @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d") })
-	@Column(name = "AL_ID", length = 100)
-	private String alId;
-	@Column(name = "AL_NAME", length = 100)
-	private String alName;
-	@Column(name = "AL_DESC", length = 100)
-	private String alDesc;
+	@Column(name  = "STATUS_ID", length = 36)
+	private String statusId;
+	@Column(name = "IS_ACTIVE")
+	private Boolean isActive;
+	@Column(name = "STATUS_NAME", nullable = false)
+	private String statusName;
+	@Column(name = "DESCRIPTION", nullable = false)
+	private String description;
+	@Column(name = "TYPE", length = 20)
+	private String type;
 	@Column(name = "IS_DELETED")
 	private Boolean isDeleted;
 	@Column(name = "CREATED_BY", length = 36)

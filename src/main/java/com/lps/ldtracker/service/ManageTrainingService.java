@@ -3,7 +3,7 @@ package com.lps.ldtracker.service;
 import java.util.List;
 
 import com.lps.ldtracker.dto.ManageTrainingDto;
-import com.lps.ldtracker.model.Training_Dtl;
+import com.lps.ldtracker.entity.Training_Dtl;
 
 public interface ManageTrainingService {
 

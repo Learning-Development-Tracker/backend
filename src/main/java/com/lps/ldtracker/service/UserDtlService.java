@@ -3,11 +3,11 @@
 import java.util.List;
 import java.util.Optional;
 
+import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UserDetail;
-import com.lps.ldtracker.model.UserDtl;
 
 public interface UserDtlService {
 	public List<UserDtl> getUserList();

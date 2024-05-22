@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageTrainingDto;
-import com.lps.ldtracker.model.Training_Dtl;
+import com.lps.ldtracker.entity.Training_Dtl;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageTrainingService;
 
