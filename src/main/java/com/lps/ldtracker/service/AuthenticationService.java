@@ -2,6 +2,8 @@ package com.lps.ldtracker.service;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -25,6 +28,8 @@ public class AuthenticationService {
 	private final UserDtlRepository userDtlRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 	
 	public AuthenticationResponse login(LoginRequest loginRequest) throws AuthenticationFailedException, JsonProcessingException {
 		String username = loginRequest.getUsername();

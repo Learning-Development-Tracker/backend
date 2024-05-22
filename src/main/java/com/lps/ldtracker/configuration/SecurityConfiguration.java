@@ -29,6 +29,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -49,6 +51,16 @@ public class SecurityConfiguration {
 	@SuppressWarnings("removal")
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
+		.cors(httpSecurityCorsConfigurer -> {
+                httpSecurityCorsConfigurer.configurationSource(request -> {
+                    var cors = new org.springframework.web.cors.CorsConfiguration();
+                    cors.setAllowedOrigins(List.of("http://localhost:4200")); // Change to your frontend origin
+                    cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+                    cors.setAllowCredentials(true);
+                    return cors;
+                });
+            })
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
