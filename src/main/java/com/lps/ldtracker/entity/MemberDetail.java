@@ -1,4 +1,4 @@
-package com.lps.ldtracker.model;
+package com.lps.ldtracker.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
