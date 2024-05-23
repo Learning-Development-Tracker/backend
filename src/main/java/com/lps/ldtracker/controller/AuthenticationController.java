@@ -26,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lps.ldtracker.dto.ResourceDto;
+import com.lps.ldtracker.dto.SetTrainingDto;
+import com.lps.ldtracker.entity.CertificationFileUpload;
 import com.lps.ldtracker.entity.SkillsDetail;
 import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
@@ -34,9 +36,11 @@ import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.LoginResponse;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.repository.SetTrainingRepository;
 import com.lps.ldtracker.service.AuthenticationService;
 import com.lps.ldtracker.service.CertificationFileUploadService;
 import com.lps.ldtracker.service.ResourceService;
+import com.lps.ldtracker.service.SetTrainingService;
 import com.lps.ldtracker.service.SkillsDetailService;
 import com.lps.ldtracker.service.UserDtlService;
 
@@ -55,6 +59,8 @@ public class AuthenticationController {
 	private final ResourceService resourceService;
 	private final CertificationFileUploadService certificationFileUploadService;
 	private final SkillsDetailService skillsDetailService;
+	private final SetTrainingService setTrainingService;
+	private final SetTrainingRepository trainingProgressRepository;
 	
 	private final UserDtlService userDtlService; 
  
@@ -186,6 +192,17 @@ public class AuthenticationController {
 	public ResponseEntity<Object> updateCertifications(@RequestParam("files") MultipartFile[] files,
              @RequestParam Map<String, String> headers) {
 		return ResponseEntity.ok().body(certificationFileUploadService.updateCertifications(files, headers));
-}
+	}
+	
+	@PostMapping("/setTraining")
+    public ResponseEntity<Result> assignTrainings(@RequestBody SetTrainingDto request) {
+		Result result =  setTrainingService.assignTrainings(request.getMemberIds(), request.getTrainings());
+		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/countTrainings/{memberId}")
+    public int getNumberOfTrainingsAssigned(@PathVariable String memberId) {
+        return trainingProgressRepository.countByMemberId(memberId);
+    }
 	
 }
