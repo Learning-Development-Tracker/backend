@@ -27,7 +27,7 @@ public class ResourceDto {
 	private Boolean isEnabled = false;
 	private String careerStep;
 	private String team;
-//	private String status;
+	private String status;
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private RoleSecurity role;
