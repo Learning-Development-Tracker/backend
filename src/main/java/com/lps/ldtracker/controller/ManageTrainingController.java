@@ -2,6 +2,7 @@ package com.lps.ldtracker.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,10 @@ import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.service.ManageTrainingService;
 import com.lps.ldtracker.service.ResultService;
+import com.lps.ldtracker.service.ViewCalendarScheduleService;
 import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
+import com.lps.ldtracker.repository.TrainingRepository;
+import com.lps.ldtracker.dto.ViewCalenderScheduleDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +45,9 @@ public class ManageTrainingController {
 	
 	@Autowired
 	ManageTrainingService manageTrainingService;
+	
+	@Autowired
+	ViewCalendarScheduleService viewCalendarScheduleService;
 	
 	
 	@GetMapping(value="/getTrainingList")
@@ -105,5 +112,19 @@ public class ManageTrainingController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
+    @GetMapping(value="/getViewCalendarSchedule")
+	public ResponseEntity<Result> getViewCalendarSchedule() {
+		Result result = new Result();
+		try {
+			List<ViewCalenderScheduleDto> calendarSched =  this.viewCalendarScheduleService.getViewCalendarSchedule();
+			result.setData(calendarSched);
+			result.setStatus("SUCCESS");
+		} catch (Exception e) {
+			result.setStatus("FAILED");
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 }
