@@ -1,5 +1,8 @@
 package com.lps.ldtracker.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.dto.ManageTrainingDto;
+import com.lps.ldtracker.entity.Training_Dtl;
+import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.service.ManageTrainingService;
-
-import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.ViewCalendarScheduleService;
 import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
 
 import lombok.RequiredArgsConstructor;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +37,8 @@ import com.lps.ldtracker.model.Training_Dtl;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.dto.ViewCalenderScheduleDto;
 
+=======
+>>>>>>> 3b78edaae755508e46d86fdbb44a4584f7ebf7e8
 
 @RestController
 @RequiredArgsConstructor

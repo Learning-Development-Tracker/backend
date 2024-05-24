@@ -2,9 +2,6 @@ package com.lps.ldtracker.dto;
 
 import java.sql.Date;
 
-import org.hibernate.annotations.NaturalId;
-import org.springframework.data.annotation.Id;
-
 import lombok.Data;
 
 @Data

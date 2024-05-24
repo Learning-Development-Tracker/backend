@@ -15,14 +15,12 @@ import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageTrainingDto;
-import com.lps.ldtracker.model.Training_Dtl;
-import com.lps.ldtracker.service.JwtService;
+import com.lps.ldtracker.entity.Training_Dtl;
+import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageTrainingService;
 
 import jakarta.persistence.ParameterMode;
 import lombok.RequiredArgsConstructor;
-
-import com.lps.ldtracker.repository.TrainingRepository;
 
 
 @Service
@@ -127,7 +125,7 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
     public Training_Dtl editTraining(Integer Id, Training_Dtl updatedTraining) {
 		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
         if (existingTraining != null) {
-            updatedTraining.setId(Id);
+            updatedTraining.setId(Id.toString());
             return trainingRepository.save(updatedTraining);
         } else {
             return null;
