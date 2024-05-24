@@ -10,7 +10,7 @@ public class MemberInfo {
 	private String firstName;
 	private String middleName;
 	private String fullName;
-	private String employeeNum;
+	private Integer employeeNum;
 	private String regionId;
 	private String emailAddress;
 	private String employmentDt;

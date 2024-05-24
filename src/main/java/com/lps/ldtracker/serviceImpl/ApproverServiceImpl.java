@@ -46,7 +46,7 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 				ul.setFirstName((String) result[2]);
 				ul.setMiddleName((String) result[3]);
 				ul.setFullName((String) result[4]);
-				ul.setEmployeeNum((String) result[5]);
+				ul.setEmployeeNum((Integer) result[5]);
 				ul.setRegionId((String) result[6]);
 				ul.setEmailAddress((String) result[7]);
 				ul.setEmploymentDt((String) result[8]);
