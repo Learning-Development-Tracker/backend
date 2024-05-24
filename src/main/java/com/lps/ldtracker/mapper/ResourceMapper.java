@@ -18,7 +18,7 @@ public class ResourceMapper {
 					resourceDto.getIsEnabled(),
 					resourceDto.getCareerStep(),
 					resourceDto.getTeam(),
-//					resourceDto.getStatus(),
+					"",
 					generatedPassword,
 					resourceDto.getRole(),
 					resourceDto.getSkills()
@@ -39,7 +39,7 @@ public class ResourceMapper {
 					resource.isEnabled(),
 					resource.getCareerStep(),
 					resource.getTeam(),
-//					resource.getStatus(),
+					resource.getStatus(),
 					resource.getPassword(),
 					resource.getRole(),
 					resource.getSkills()

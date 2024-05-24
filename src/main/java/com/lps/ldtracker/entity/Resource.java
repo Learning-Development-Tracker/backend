@@ -64,7 +64,8 @@ public class Resource implements UserDetails{
 	@Column(name = "TEAM_ID")
 	private String team;
 	
-//	private String status;
+	@Column(name = "STATUS_ID")
+	private String status = "";
 	
 	private String password;
 	
