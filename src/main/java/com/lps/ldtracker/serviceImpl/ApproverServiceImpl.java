@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
+import com.lps.ldtracker.entity.StatusDetail;
+import com.lps.ldtracker.model.CertTracking;
 import com.lps.ldtracker.model.MemberCertDtl;
 import com.lps.ldtracker.model.MemberInfo;
+import com.lps.ldtracker.model.SkillName;
 import com.lps.ldtracker.service.AdminService;
 import com.lps.ldtracker.service.ApproverService;
 
@@ -26,6 +29,9 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	private static final String SP_GETMEMBERCERTIFICATION = "sp_getMemberCertification";
 	private static final String SP_GETTRAININGSFORAPPROVAL = "sp_getTrainingsForApproval";
 	private static final String SP_GETMEMBERTRAININGLIST = "sp_getMemberTrainingList";
+	private static final String SP_GETCERTTRACKING = "sp_getCertTracking";
+	private static final String SP_GETSKILLNAME = "sp_getSkillName";
+	private static final String SP_GETSTATUS = "sp_getStatus";
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -165,4 +171,67 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
         retval += hours + " hours and " + remainingMinutesFinal + " minutes";
         return retval;
     }
+	
+	public List<CertTracking> getCertTrackingDetails() {
+		
+		List<CertTracking> resList = new ArrayList<CertTracking>();
+		try {
+			Session session = getRealSession(sessionFactory);
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTTRACKING);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+				CertTracking res = new CertTracking();
+				res.setCertification_name((String) result[0]);
+				res.setSkill((String) result[1]);
+				res.setRequester((String) result[2]);
+				res.setStatus((String) result[3]);
+				resList.add(res);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resList;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SkillName> getSkillName() {
+		
+		List<SkillName> resList = new ArrayList<SkillName>();
+		try {
+			Session session = getRealSession(sessionFactory);
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETSKILLNAME);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+				SkillName res = new SkillName();
+				res.setSkill((String) result[0]);
+				resList.add(res);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resList;
+		
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<StatusDetail> getStatus() {
+		
+		List<StatusDetail> resList = new ArrayList<>();
+		try {
+			Session session = getRealSession(sessionFactory);
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETSTATUS);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+				StatusDetail res = new StatusDetail();
+				res.setStatusName((String) result[0]);
+				resList.add(res);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resList;
+	}
+	
 }
