@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,8 +41,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	@SuppressWarnings("unchecked")
 	public List<MemberInfo> getTeamMemberList(String strUserID){
 		List<MemberInfo> usrList = new ArrayList<MemberInfo>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall sp = session.createStoredProcedureCall(SP_GETTEAMMEMBERLIST);
 			sp.registerStoredProcedureParameter("P_USERID", String.class, ParameterMode.IN);
 			sp.setParameter("P_USERID", strUserID);
@@ -69,6 +70,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return usrList;
 	}
@@ -76,8 +81,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	@SuppressWarnings("unchecked")
 	public List<MemberCertDtl> getMemberCertification(String strMemberID){
 		List<MemberCertDtl> certDtl = new ArrayList<MemberCertDtl>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall sp = session.createStoredProcedureCall(SP_GETMEMBERCERTIFICATION);
 			sp.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
 			sp.setParameter("P_MEMBERID", strMemberID);
@@ -94,6 +99,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return certDtl;
 	}
@@ -101,8 +110,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	@SuppressWarnings("unchecked")
 	public List<MemberCertDtl> getTrainingsForApproval(String strMemberID){
 		List<MemberCertDtl> approvalsDtl = new ArrayList<MemberCertDtl>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall sp = session.createStoredProcedureCall(SP_GETTRAININGSFORAPPROVAL);
 			sp.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
 			sp.setParameter("P_MEMBERID", strMemberID);
@@ -121,6 +130,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return approvalsDtl;
 	}
@@ -128,8 +141,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	@SuppressWarnings("unchecked")
 	public List<MemberCertDtl> getMemberTrainingList(String strMemberID){
 		List<MemberCertDtl> approvalsDtl = new ArrayList<MemberCertDtl>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall sp = session.createStoredProcedureCall(SP_GETMEMBERTRAININGLIST);
 			sp.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
 			sp.setParameter("P_MEMBERID", strMemberID);
@@ -156,6 +169,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return approvalsDtl;
 	}
@@ -178,8 +195,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	public List<CertTracking> getCertTrackingDetails() {
 		
 		List<CertTracking> resList = new ArrayList<CertTracking>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTTRACKING);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -194,6 +211,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return resList;
 	}
@@ -203,8 +224,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	public List<SkillName> getSkillName() {
 		
 		List<SkillName> resList = new ArrayList<SkillName>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETSKILLNAME);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -214,6 +235,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return resList;
 		
@@ -224,8 +249,9 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 	public List<StatusDetail> getStatus() {
 		
 		List<StatusDetail> resList = new ArrayList<>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
+			
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETSTATUS);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -235,6 +261,10 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return resList;
 	}
