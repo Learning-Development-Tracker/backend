@@ -3,6 +3,7 @@ package com.lps.ldtracker.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.sql.Date;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -172,6 +173,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
         return retval;
     }
 	
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<CertTracking> getCertTrackingDetails() {
 		
 		List<CertTracking> resList = new ArrayList<CertTracking>();
@@ -185,6 +188,8 @@ public class ApproverServiceImpl implements ApproverService, RealSessionAware {
 				res.setSkill((String) result[1]);
 				res.setRequester((String) result[2]);
 				res.setStatus((String) result[3]);
+				res.setCertification_details((String) result[4]);
+				res.setTraining_completion_date((Date) result[5]);
 				resList.add(res);
 			});
 		} catch (Exception e) {
