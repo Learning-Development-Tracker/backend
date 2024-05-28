@@ -11,5 +11,26 @@ spring:
     ddl-auto: update
     dialect: org.hibernate.dialect.SQLServer2012Dialect
     namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mail:
+   host: smtp.gmail.com
+   port: 587
+   username: lpshris1@gmail.com
+   password: xcmhecferfilhhmi
+   default-encoding: UTF-8
+   properties:
+      mail: 
+        mime:
+           charset: UTF
+        smtp: 
+           writetimeout: 10000
+           connectiontimeout: 10000
+           timeout: 10000
+           auth: true
+           starttls:
+               enable: true
+               required: true
+   verify:
+      host: http://localhost:80
+      login: http://localhost:4200/login  
 server:
   port: 80

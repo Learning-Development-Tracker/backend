@@ -7,7 +7,6 @@ import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
-import com.lps.ldtracker.model.UserDetail;
 
 public interface UserDtlService {
 	public List<UserDtl> getUserList();
