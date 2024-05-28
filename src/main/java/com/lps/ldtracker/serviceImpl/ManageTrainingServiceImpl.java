@@ -9,15 +9,17 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.procedure.ProcedureCall;
+import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageTrainingDto;
-import com.lps.ldtracker.model.Training_Dtl;
+import com.lps.ldtracker.entity.Training_Dtl;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageTrainingService;
 
+import jakarta.persistence.ParameterMode;
 import lombok.RequiredArgsConstructor;
 
 
@@ -27,7 +29,8 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	
 	private final TrainingRepository trainingRepository;
 	
-private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
+	private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
+	private static final String SP_DELETETRAINING = "sp_deleteTraining";
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -43,25 +46,27 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
 			recordList.forEach(result -> {
 			    ManageTrainingDto res = new ManageTrainingDto();
 			    res.setId((String) result[0]);
-			    res.setTrainingname((String) result[1]);    
-			    res.setTrainingtype((String) result[2]);    
-			    res.setProductname((String) result[3]);
-			    res.setStartdate((Date) result[4]);
-			    res.setDuedate((Date) result[5]);
-			    res.setPrereq((String) result[6]);
+			    res.setTrainingName((String) result[1]);    
+			    res.setTrainingType((String) result[2]);    
+			    res.setProductName((String) result[3]);
+			    res.setStartDate((Date) result[4]);
+			    res.setDueDate((Date) result[5]);
+			    res.setPreReq((String) result[6]);
 			    res.setDescription((String) result[7]);
-			    res.setTraininglink((String) result[8]);
-			    res.setTrainingtags((String) result[9]);
-			    res.setIsrequired((Boolean) result[10]);
+			    res.setTrainingLink((String) result[8]);
+			    res.setTrainingTags((String) result[9]);
+			    res.setIsRequired((Boolean) result[10]);
 			    res.setCertification((Boolean) result [11]);
-			    res.setCertificationname((String) result[12]);
-			    res.setDuration((String) result[13]);
-			    res.setFee((String) result[14]);
-			    res.setCertlink((String) result[15]);
-			    res.setTrcondition((Boolean) result[16]);
-			    res.setTrconditionValue((String) result[17]);
-			    res.setActive((Boolean) result[18]); 
-			    res.setExpirydate((String) result[19]);
+			    res.setCertID((String) result[12]);
+			    res.setCertName((String) result[13]);
+			    res.setDuration((String) result[14]);
+			    res.setFee((Integer) result[15]);
+			    res.setCurrency((String) result[16]);
+			    res.setCertLink((String) result[17]);
+			    res.setTrCondition((Integer) result[18]);
+			    res.setTrConditionValue((String) result[19]);
+			    res.setActive((Boolean) result[20]); 
+			    res.setExpiryDate((Date) result[21]);
 			    resList.add(res);		
 			});
 		} catch (Exception e) {
@@ -77,6 +82,38 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
 		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
 		existingTraining.ifPresent(trainingRepository::delete);
 	}
+	
+	@Override
+	public String deleteTraining(String trainingId) {
+	    try {
+	        Session session = getRealSession(sessionFactory);
+	        ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_DELETETRAINING);
+	        
+	        // Register input parameter
+	        storedProcedureCall.registerStoredProcedureParameter("TrainingID", String.class, ParameterMode.IN);
+	        storedProcedureCall.registerStoredProcedureParameter("Message", String.class, ParameterMode.OUT);
+	        
+	        // Set input parameter
+	        storedProcedureCall.setParameter("TrainingID", trainingId);
+	        
+	        // Execute the stored procedure
+	        ProcedureOutputs procedureOutputs = storedProcedureCall.getOutputs();
+	        
+	        // Get output parameter
+	        Object output = procedureOutputs.getOutputParameterValue("Message");
+	        
+	        // Check if output is null
+	        if (output != null) {
+	            return output.toString();
+	        } else {
+	            return "No message returned from the stored procedure.";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Error occurred while deleting training record.";
+	    }
+	}
+
 
 	@Override
     public Training_Dtl addTraining(Training_Dtl training) {
@@ -88,7 +125,7 @@ private static final String SP_GETTRAININGLIST = "sp_getTrainingList";
     public Training_Dtl editTraining(Integer Id, Training_Dtl updatedTraining) {
 		Optional<Training_Dtl> existingTraining = trainingRepository.findById(Id);
         if (existingTraining != null) {
-            updatedTraining.setId(Id);
+            updatedTraining.setId(Id.toString());
             return trainingRepository.save(updatedTraining);
         } else {
             return null;

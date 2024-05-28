@@ -3,7 +3,7 @@
  */
 package com.lps.ldtracker.model;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import lombok.Builder;
 
@@ -14,8 +14,8 @@ import lombok.Builder;
  */
 @Builder
 public record LoginResponse(
-		String userId, Integer isActive, String userName, String userPass, Integer isDeleted, String token,
-		String createdBy, LocalDateTime createdDate, String updatedBy, LocalDateTime updatedDate
+		String userId, Boolean isActive, String userName, String userPass, Boolean isDeleted, String token,
+		String createdBy, Timestamp createdDate, String updatedBy, Timestamp updatedDate, String accessName
 		) {
 	
 }
