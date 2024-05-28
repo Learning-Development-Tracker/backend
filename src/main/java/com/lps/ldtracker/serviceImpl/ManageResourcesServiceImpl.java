@@ -37,8 +37,11 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 				res.setEmployeeNum((Integer) result[2]);
 				res.setRoleName((String) result[3]);
 				res.setTeamName((String) result[4]);
-				res.setTrainings((String) result[5]);
-				res.setCertifications((String) result[6]);
+				res.setMembertrainings((String) result[5]);
+				//res.setMembercert((String) result[6]);
+				List<String> cert = new ArrayList<String>();
+				cert.add((String) result[6]);
+				res.setCertifications(cert);
 				resList.add(res);
 			});
 		} catch (Exception e) {
