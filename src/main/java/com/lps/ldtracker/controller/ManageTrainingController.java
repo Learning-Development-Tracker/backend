@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.dto.ManageTrainingDto;
+import com.lps.ldtracker.dto.TrainingLinksDto;
+import com.lps.ldtracker.dto.TrainingLinksDto;
 import com.lps.ldtracker.entity.Training_Dtl;
 import com.lps.ldtracker.model.LdTrackerError;
+import com.lps.ldtracker.model.MemberInfo;
+import com.lps.ldtracker.model.MemberInfo;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.service.ManageTrainingService;
 import com.lps.ldtracker.service.ResultService;
@@ -28,6 +32,7 @@ import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.dto.ViewCalenderScheduleDto;
 
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
 
@@ -93,21 +98,21 @@ public class ManageTrainingController {
 		
     }
 	
-    @PostMapping("/addTraining/")
-    public ResponseEntity<Training_Dtl> addTraining(@RequestBody Training_Dtl training) {
-        Training_Dtl addedTrainingDetails = manageTrainingService.addTraining(training);
-        return new ResponseEntity<>(addedTrainingDetails, HttpStatus.CREATED);
-    }
-    
-    @PutMapping("/editTraining/{Id}")
-    public ResponseEntity<Training_Dtl> editTraining(@RequestBody Integer Id, Training_Dtl training) {
-        Training_Dtl editedTraining = manageTrainingService.editTraining(Id, training);
-        if (editedTraining != null) {
-            return new ResponseEntity<>(editedTraining, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PostMapping("/addTraining")
+    public ResponseEntity<ManageTrainingDto> addTraining(@RequestBody ManageTrainingDto trainingDetails) {
+    	ManageTrainingDto addedTraining = manageTrainingService.saveTraining(trainingDetails);
+        try {
+        	if(addedTraining.getTrainingLinksLists().size() != 0) {
+        		addedTraining.setSubTrId(trainingDetails.getSubTrId());
+        		manageTrainingService.saveTrainingLinks(addedTraining.getTrainingLinksLists());
+        	}
+            return ResponseEntity.status(HttpStatus.CREATED).body(addedTraining);
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            
         }
-    }
+    }   
     
     @GetMapping(value="/getViewCalendarSchedule")
 	public ResponseEntity<Result> getViewCalendarSchedule() {
@@ -122,5 +127,20 @@ public class ManageTrainingController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+    
+    @GetMapping(value = "/getTrainingLinks/{id}")
+    public ResponseEntity<Result> getTrainingLinks(@PathVariable String id) {
+        Result result = new Result();
+        try {
+            System.out.println("TrainingID: " + id);
+            List<TrainingLinksDto> trainingLinksList = manageTrainingService.getTrainingLinks(id);
+            result.setData(trainingLinksList);
+            result.setStatus("SUCCESS");
+        } catch (Exception e) {
+            result.setStatus("FAILED");
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
 }
