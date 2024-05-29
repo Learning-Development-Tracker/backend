@@ -27,6 +27,8 @@ public class ErrorHandlingService {
 		    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	
 	private static final Pattern VALID_PHONE_NO_REGEX = Pattern.compile("\\d+");
+	
+	private static final Pattern VALID_USER_NAME_REGEX = Pattern.compile(".{6,}");
 
     public ResponseEntity<Result> createErrorResponse(String errorCode, String errorMessage, HttpStatus httpStatus) {
         List<LdTrackerError> errors = new ArrayList<>();
@@ -90,6 +92,15 @@ public class ErrorHandlingService {
     		String[] msgParam = new String[1];
     		msgParam[0] = phoneNo;
     		errors.add(new LdTrackerError(errorCode, messageSource.getMessage("validation.number.message", msgParam, LocaleContextHolder.getLocale())));
+    	}
+    }
+    
+    public void validateUserName(String userName, String errorCode, List<LdTrackerError> errors) {  
+    	Matcher matcher = VALID_USER_NAME_REGEX.matcher(userName); 
+    	if(!matcher.matches()) {
+    		String[] msgParam = new String[1];
+    		msgParam[0] = userName;
+    		errors.add(new LdTrackerError(errorCode, messageSource.getMessage("validation.name.message", msgParam, LocaleContextHolder.getLocale())));
     	}
     }
     

@@ -1,19 +1,20 @@
 package com.lps.ldtracker.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LoginRequest;
-import com.lps.ldtracker.model.UserDtl;
 import com.lps.ldtracker.repository.UserDtlRepository;
-import com.lps.ldtracker.security.RoleSecurity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,10 +25,8 @@ public class AuthenticationService {
 	private final UserDtlRepository userDtlRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
-
-	private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 	
-	public AuthenticationResponse login(LoginRequest loginRequest) throws AuthenticationFailedException {
+	public AuthenticationResponse login(LoginRequest loginRequest) throws AuthenticationFailedException, JsonProcessingException {
 		String username = loginRequest.getUsername();
 	    String password = loginRequest.getPassword();
 	    
@@ -44,7 +43,7 @@ public class AuthenticationService {
 		        throw new AuthenticationFailedException("User not found");
 		    });
 		
-		if (1 > userDtl.getIsActive()) {
+		if (Boolean.FALSE.equals(userDtl.getIsActive())) {
             throw new AuthenticationFailedException("Your account is inactive");
 		}
 		
@@ -58,8 +57,12 @@ public class AuthenticationService {
 		} catch (AuthenticationException authenticationException) {
 			throw new AuthenticationFailedException(LdTrackerConstants.USER_INCORRECT);
 		}
-		
-		var jwtToken = jwtService.generateToken(userDtl);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.findAndRegisterModules();
+		String json = mapper.writeValueAsString(userDtl);
+		Map<String, Object> map 
+		  = mapper.readValue(json, new TypeReference<Map<String,Object>>(){});
+		var jwtToken = jwtService.generateToken(map, userDtl);
 		
 		return AuthenticationResponse
 			.builder()
