@@ -48,7 +48,8 @@ public class SecurityConfiguration {
 		"api/v1/admin/**",
 		"/api/v1/resources/**",
 //		"/h2-console/**"
- 		"/actuator/**"
+ 		"/actuator/**",
+ 		"/api/v1/approver/**"
     };
 	
 	@Bean
