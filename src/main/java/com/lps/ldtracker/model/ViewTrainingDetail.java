@@ -13,11 +13,11 @@ public class ViewTrainingDetail {
 	private String name;
 	private String status;
 	private String duration;
-	private BigDecimal progressNumber;
-	private Date date_started;
+	private Integer progressNumber;
+	private Timestamp date_started;
 	private Timestamp date_completed;
-	private BigDecimal estimated_hours;
-	private Date due_date;
+	private Integer estimated_hours;
+	private Timestamp due_date;
 	private Timestamp target_date;
 	private String link;
 	private String remarks;
