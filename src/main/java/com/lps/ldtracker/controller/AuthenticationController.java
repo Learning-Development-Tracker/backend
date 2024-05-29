@@ -28,6 +28,7 @@ import com.lps.ldtracker.dto.ResourceDto;
 import com.lps.ldtracker.dto.SetTrainingDto;
 import com.lps.ldtracker.entity.CertificationFileUpload;
 import com.lps.ldtracker.entity.SkillsDetail;
+
 import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -164,10 +165,10 @@ public class AuthenticationController {
 	@GetMapping(value="/viewResourceCertification/{ownerId}")
 	public ResponseEntity<Object> viewResourceCertification(@PathVariable String ownerId) {
 		Result result = this.certificationFileUploadService.viewResourceCertification(ownerId);
-		
+ 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@PutMapping(value="/editResource/{id}")
     public ResponseEntity<Result> editResource(@PathVariable String id, @RequestBody ResourceDto resourceDto) {
         Result result = resourceService.editResource(id, resourceDto);
@@ -202,5 +203,5 @@ public class AuthenticationController {
     public int getNumberOfTrainingsAssigned(@PathVariable String memberId) {
         return trainingProgressRepository.countByMemberId(memberId);
     }
-	
+ 	
 }

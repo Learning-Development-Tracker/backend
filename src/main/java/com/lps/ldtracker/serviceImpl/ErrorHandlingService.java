@@ -111,4 +111,13 @@ public class ErrorHandlingService {
     	}
     }
     
+    public void validateUserName(String userName, String errorCode, List<LdTrackerError> errors) {  
+    	Matcher matcher = VALID_USER_NAME_REGEX.matcher(userName); 
+    	if(!matcher.matches()) {
+    		String[] msgParam = new String[1];
+    		msgParam[0] = userName;
+    		errors.add(new LdTrackerError(errorCode, messageSource.getMessage("validation.name.message", msgParam, LocaleContextHolder.getLocale())));
+    	}
+    }
+    
 }

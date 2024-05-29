@@ -16,7 +16,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,9 +25,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @Configuration
@@ -58,7 +55,7 @@ public class SecurityConfiguration {
 		.cors(httpSecurityCorsConfigurer -> {
                 httpSecurityCorsConfigurer.configurationSource(request -> {
                     var cors = new org.springframework.web.cors.CorsConfiguration();
-                    cors.setAllowedOrigins(List.of("http://localhost:4200")); // Change to your frontend origin
+                    cors.setAllowedOrigins(List.of("http://192.168.10.58:2401")); // Change to your frontend origin
                     cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     cors.setAllowCredentials(true);
