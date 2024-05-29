@@ -9,7 +9,6 @@ import static com.lps.ldtracker.permission.Permission.USER_DELETE;
 import static com.lps.ldtracker.permission.Permission.USER_READ;
 import static com.lps.ldtracker.permission.Permission.USER_UPDATE;
 import static com.lps.ldtracker.security.RoleSecurity.ADMIN;
-import static com.lps.ldtracker.security.RoleSecurity.APPROVER;
 import static com.lps.ldtracker.security.RoleSecurity.GUEST;
 import static com.lps.ldtracker.security.RoleSecurity.USER;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -17,9 +16,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,8 +25,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -49,23 +45,23 @@ public class SecurityConfiguration {
 		"/api/v1/resources/**",
 //		"/h2-console/**"
  		"/actuator/**",
- 		"/api/v1/approver/**"
+		"/api/v1/approver/**"
     };
 	
 	@Bean
 	@SuppressWarnings("removal")
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
-			.cors(httpSecurityCorsConfigurer -> {
-	            httpSecurityCorsConfigurer.configurationSource(request -> {
-	                var cors = new org.springframework.web.cors.CorsConfiguration();
-	                cors.setAllowedOrigins(List.of("http://192.168.10.58:2401")); // Change to your frontend origin
-	                cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-	                cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-	                cors.setAllowCredentials(true);
-	                return cors;
-	            });
-	        })
+		.cors(httpSecurityCorsConfigurer -> {
+                httpSecurityCorsConfigurer.configurationSource(request -> {
+                    var cors = new org.springframework.web.cors.CorsConfiguration();
+                    cors.setAllowedOrigins(List.of("http://192.168.10.58:2401")); // Change to your frontend origin
+                    cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+                    cors.setAllowCredentials(true);
+                    return cors;
+                });
+            })
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
@@ -74,12 +70,10 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)
 				.permitAll()
-				.requestMatchers(
-						"/api/v1/resources/**",
-						"/api/v1/trainings/**",
-						"/api/v1/approver/**"
-						)
-				.hasAnyAuthority(ADMIN.name(), USER.name(), APPROVER.name())
+				.requestMatchers("/api/v1/resources/**")
+				.hasAnyAuthority(ADMIN.name(), USER.name())
+				.requestMatchers("/api/v1/trainings/**")
+				.hasAnyAuthority(ADMIN.name(), USER.name())
 				.requestMatchers(GET, "/api/v1/admin/**")
 				.hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
                 .requestMatchers(POST, "/api/v1/admin/**")

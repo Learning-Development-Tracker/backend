@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class LdTrackerConstants {
 	
-	//Hris Errors
+	//Ld Errors
 	public static final String MISSING_PARAMETERS = "MISSING_PARAMETERS";
 	public static final String INVALID_CHARACTERS = "INVALID_CHARACTERS";
 	public static final String INVALID_PASSWORD = "INVALID_PASSWORD";

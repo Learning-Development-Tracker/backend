@@ -31,7 +31,13 @@ spring:
                   enable: true
                   required: true
       verify:
-         host: http://localhost:9191
+         host: http://localhost:80
          login: http://localhost:4200/login   
+servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 2000MB
 server:
-   port: 9191
+   port: 80
+   tomcat:
+       max-swallow-size: 1000MB

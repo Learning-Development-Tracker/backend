@@ -1,18 +1,20 @@
 ﻿package com.lps.ldtracker.serviceImpl;
 
 import static com.lps.ldtracker.constants.LdTrackerConstants.ACCOUNT_VERIFIED;
-import static com.lps.ldtracker.constants.LdTrackerConstants.ADMIN;
 import static com.lps.ldtracker.constants.LdTrackerConstants.BAD_REQUEST;
 import static com.lps.ldtracker.constants.LdTrackerConstants.EMAIL;
 import static com.lps.ldtracker.constants.LdTrackerConstants.EMAIL_SUFFIX;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR;
+import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR_FETCH;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR_OCCURED;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR_REGISTER;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR_RESET;
 import static com.lps.ldtracker.constants.LdTrackerConstants.INVALID_EMAIL;
 import static com.lps.ldtracker.constants.LdTrackerConstants.INVALID_PASSWORD;
 import static com.lps.ldtracker.constants.LdTrackerConstants.INVALID_USERNAME;
+import static com.lps.ldtracker.constants.LdTrackerConstants.MEMBERID;
 import static com.lps.ldtracker.constants.LdTrackerConstants.PASSWORD;
+import static com.lps.ldtracker.constants.LdTrackerConstants.SP_GETUSERINFO;
 import static com.lps.ldtracker.constants.LdTrackerConstants.SUCCESS;
 import static com.lps.ldtracker.constants.LdTrackerConstants.SUCCESS_PASSWORD_UPDATE;
 import static com.lps.ldtracker.constants.LdTrackerConstants.USER;
@@ -27,7 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.util.Strings;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.procedure.ProcedureCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +44,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
-import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.entity.AccessLevel;
 import com.lps.ldtracker.entity.ConfirmationDetail;
 import com.lps.ldtracker.entity.UserDtl;
@@ -49,6 +53,7 @@ import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.model.UserDetail;
 import com.lps.ldtracker.model.ValidationParamCollection;
 import com.lps.ldtracker.repository.AccessLevelRepository;
 import com.lps.ldtracker.repository.ConfirmationRepository;
@@ -59,6 +64,7 @@ import com.lps.ldtracker.service.JwtService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.UserDtlService;
 
+import jakarta.persistence.ParameterMode;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -110,7 +116,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				result.setStatus(ERROR);
 				return result;
 			} else {
-				AccessLevel accLevel = accessLevelRepository.findByAlName(ADMIN)
+				AccessLevel accLevel = accessLevelRepository.findByAlName(USER)
 						.orElse(null);
 				var userBuilder = UserDtl.builder()
 						.userName(request.username())
@@ -120,6 +126,9 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				UserDtl savedUserDtl = userDtlRepository.save(userBuilder);
 				ConfirmationDetail confirmation = new ConfirmationDetail(savedUserDtl);
 				confirmationRepository.save(confirmation);
+				logger.info("username: {}", savedUserDtl.getUsername());
+				logger.info("password: {}", savedUserDtl.getPassword());
+				logger.info("email: {}", savedUserDtl.getUsername().concat(EMAIL_SUFFIX));
 				emailService.sendHtmlEmail(
 						savedUserDtl.getUsername(), 
 						savedUserDtl.getUsername().concat(EMAIL_SUFFIX),
@@ -137,6 +146,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			}
 			
 		} catch (Exception e) {
+			logger.info("here4");
 			e.printStackTrace();
 			logger.error(ERROR_REGISTER + e.getMessage());
 
@@ -236,6 +246,43 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			}
 
 		return result;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<UserDetail> getUserById(String id) {
+
+	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    try  {
+	    		Session session = getRealSession(sessionFactory);
+	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
+	            storedProcedureCall.registerStoredProcedureParameter(MEMBERID, String.class, ParameterMode.IN);
+	            storedProcedureCall.setParameter(MEMBERID, id);
+	            List<Object[]> recordList = storedProcedureCall.getResultList();
+	                recordList.forEach(result -> {
+	                    UserDetail res = new UserDetail();
+	                    // Map the retrieved attributes to UserDetail object
+	                    res.setLastName((String) result[0]);
+	                    res.setFirstName((String) result[1]);
+	                    res.setMiddleName((String) result[2]);
+	                    res.setSuffix((String) result[3]);
+	                    res.setGender((String) result[8]);
+	                    res.setEmailAddress((String) result[9]);
+	                    res.setCareerStep((String) result[10]);
+	                    res.setEmployeeID((int) result[11]);
+	                    res.setRegion((String) result[4]);
+	                    // Assuming role and team information are available
+	                    res.setRoles((String) result[5]);
+	                    res.setTeams((String) result[6]);
+	                    // Assuming employment status is available as a boolean
+	                    res.setEmploymentStatus((String) result[7]);
+	                    resList.add(res);
+	                });
+	        
+	    } catch (Exception e) {
+	        logger.error(ERROR_FETCH + e.getMessage(), e);
+	    }
+	    return resList;
 	}
 
 	@Override

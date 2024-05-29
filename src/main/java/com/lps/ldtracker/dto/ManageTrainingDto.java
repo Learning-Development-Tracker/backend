@@ -1,32 +1,41 @@
 package com.lps.ldtracker.dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class ManageTrainingDto {	
+public class ManageTrainingDto extends TrainingLinksDto{	
 
 	private String Id;	
-	private String trainingname;
-	private String trainingtype;
-	private String productname;
-	private Date startdate;
-	private Date duedate;
-	private String prereq;
+	private String trainingName;
+	private String trainingType;
+	private String productName;
+	private Date startDate;
+	private Date dueDate;
+	private String preReq;
 	private String description;
-	private String traininglink;
-	private String trainingtags;  
-    private Boolean isrequired;
+	private String trainingTags;  
+    private Boolean isRequired;
     private Boolean certification;
-    private String certificationname;
-    private String duration;
-    private String fee;
-    private String certlink;
-    private boolean trcondition;
-    private String trconditionValue;
+    private Integer trCondition;
+    private String trConditionValue;
     private boolean active;
-    private String expirydate;
+    
+    private String certID;
+    private String certName;
+    private String duration;
+    private Integer fee;
+    private String currency;
+    private String certLink;
+    private Date expiryDate;
+    private Boolean renewable;
+    private String skillID;
+    private String createdBy;
+    
+    private List <TrainingLinksDto> trainingLinksLists = new ArrayList<>();
     
 
 }

@@ -1,6 +1,8 @@
 ﻿package com.lps.ldtracker.serviceImpl;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
@@ -14,15 +16,20 @@ import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.dto.ManageResourceDto;
+import com.lps.ldtracker.model.MemberCertDtl;
 import com.lps.ldtracker.model.ViewTrainingDetail;
-import com.lps.ldtracker.repository.TrainingRepository;
+import com.lps.ldtracker.service.ApproverService;
 import com.lps.ldtracker.service.ManageResourcesService;
+
+import jakarta.persistence.ParameterMode;
 
 @Service
 public class ManageResourcesServiceImpl implements ManageResourcesService, RealSessionAware{
 
 	private static final String SP_GETRESOURCELIST = "sp_getResourceList";
 	private static final String SP_GETVIEWTRAININGDETAILS = "sp_getTrainingDetails";
+	private static final String SP_GETMEMBERCERTIFICATION = "sp_getMemberCertification";
+
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -32,8 +39,8 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	public List<ManageResourceDto> getResourceList() {
 
 		List<ManageResourceDto> resList = new ArrayList<ManageResourceDto>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETRESOURCELIST);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -43,12 +50,23 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 				res.setEmployeeNum((Integer) result[2]);
 				res.setRoleName((String) result[3]);
 				res.setTeamName((String) result[4]);
-				res.setTrainings((String) result[5]);
-				res.setCertifications((String) result[6]);
+				res.setMembertrainings((String) result[5]);
+				//res.setMembercert((String) result[6]);
+				List<String> cert = new ArrayList<String>();
+				
+				List<MemberCertDtl> lstCert = getMemberCertification((String) result[0]);
+				for(MemberCertDtl i: lstCert) {
+					cert.add(i.getCertName());
+				}
+				res.setCertifications(cert);
 				resList.add(res);
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return resList;
 		
@@ -59,8 +77,8 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	public List<ViewTrainingDetail> getAllViewTrainingDetails() {
 		
 		List<ViewTrainingDetail> resList = new ArrayList<ViewTrainingDetail>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETVIEWTRAININGDETAILS);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -83,8 +101,41 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 			});
 		}catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return resList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MemberCertDtl> getMemberCertification(String strMemberID){
+		List<MemberCertDtl> certDtl = new ArrayList<MemberCertDtl>();
+		Session session = getRealSession(sessionFactory);
+		try {
+			ProcedureCall sp = session.createStoredProcedureCall(SP_GETMEMBERCERTIFICATION);
+			sp.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
+			sp.setParameter("P_MEMBERID", strMemberID);
+			List<Object[]> recordList = sp.getResultList();
+			recordList.forEach(result -> {
+				MemberCertDtl cd = new MemberCertDtl();
+				cd.setMemberId((String) result[0]);
+				cd.setCertID((String) result[1]);
+				cd.setCertName((String) result[2]);
+				cd.setDocID((String) result[3]);
+				cd.setExpiryDate((String) result[4]);
+				cd.setCompletionDate((String) result[5]);
+				certDtl.add(cd);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
+		}
+		return certDtl;
 	}
 
 }
