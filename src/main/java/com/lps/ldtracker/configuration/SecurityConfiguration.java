@@ -9,6 +9,7 @@ import static com.lps.ldtracker.permission.Permission.USER_DELETE;
 import static com.lps.ldtracker.permission.Permission.USER_READ;
 import static com.lps.ldtracker.permission.Permission.USER_UPDATE;
 import static com.lps.ldtracker.security.RoleSecurity.ADMIN;
+import static com.lps.ldtracker.security.RoleSecurity.APPROVER;
 import static com.lps.ldtracker.security.RoleSecurity.GUEST;
 import static com.lps.ldtracker.security.RoleSecurity.USER;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -16,6 +17,8 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +52,16 @@ public class SecurityConfiguration {
 	@SuppressWarnings("removal")
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
+			.cors(httpSecurityCorsConfigurer -> {
+	            httpSecurityCorsConfigurer.configurationSource(request -> {
+	                var cors = new org.springframework.web.cors.CorsConfiguration();
+	                cors.setAllowedOrigins(List.of("http://localhost:4200")); // Change to your frontend origin
+	                cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	                cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+	                cors.setAllowCredentials(true);
+	                return cors;
+	            });
+	        })
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
@@ -57,10 +70,12 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)
 				.permitAll()
-				.requestMatchers("/api/v1/resources/**")
-				.hasAnyAuthority(ADMIN.name(), USER.name())
-				.requestMatchers("/api/v1/trainings/**")
-				.hasAnyAuthority(ADMIN.name(), USER.name())
+				.requestMatchers(
+						"/api/v1/resources/**",
+						"/api/v1/trainings/**",
+						"/api/v1/approver/**"
+						)
+				.hasAnyAuthority(ADMIN.name(), USER.name(), APPROVER.name())
 				.requestMatchers(GET, "/api/v1/admin/**")
 				.hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
                 .requestMatchers(POST, "/api/v1/admin/**")

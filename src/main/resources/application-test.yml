@@ -8,9 +8,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-    ddl-auto: update
-    dialect: org.hibernate.dialect.SQLServer2012Dialect
-    namingStrategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+       ddl-auto: update
+       dialect: org.hibernate.dialect.SQLServer2012Dialect
+       naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   mail:
    host: smtp.gmail.com
    port: 587
@@ -30,7 +31,7 @@ spring:
                enable: true
                required: true
    verify:
-      host: http://localhost:80
+      host: http://localhost:9191
       login: http://localhost:4200/login  
 server:
-  port: 80
+  port: 9191

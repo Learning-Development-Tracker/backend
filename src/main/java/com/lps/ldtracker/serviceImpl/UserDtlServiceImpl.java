@@ -1,6 +1,7 @@
 ﻿package com.lps.ldtracker.serviceImpl;
 
 import static com.lps.ldtracker.constants.LdTrackerConstants.ACCOUNT_VERIFIED;
+import static com.lps.ldtracker.constants.LdTrackerConstants.ADMIN;
 import static com.lps.ldtracker.constants.LdTrackerConstants.BAD_REQUEST;
 import static com.lps.ldtracker.constants.LdTrackerConstants.EMAIL;
 import static com.lps.ldtracker.constants.LdTrackerConstants.EMAIL_SUFFIX;
@@ -38,6 +39,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lps.ldtracker.configuration.RealSessionAware;
+import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.entity.AccessLevel;
 import com.lps.ldtracker.entity.ConfirmationDetail;
 import com.lps.ldtracker.entity.UserDtl;
@@ -108,7 +110,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				result.setStatus(ERROR);
 				return result;
 			} else {
-				AccessLevel accLevel = accessLevelRepository.findByAlName(USER)
+				AccessLevel accLevel = accessLevelRepository.findByAlName(ADMIN)
 						.orElse(null);
 				var userBuilder = UserDtl.builder()
 						.userName(request.username())
@@ -118,9 +120,6 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				UserDtl savedUserDtl = userDtlRepository.save(userBuilder);
 				ConfirmationDetail confirmation = new ConfirmationDetail(savedUserDtl);
 				confirmationRepository.save(confirmation);
-				logger.info("username: {}", savedUserDtl.getUsername());
-				logger.info("password: {}", savedUserDtl.getPassword());
-				logger.info("email: {}", savedUserDtl.getUsername().concat(EMAIL_SUFFIX));
 				emailService.sendHtmlEmail(
 						savedUserDtl.getUsername(), 
 						savedUserDtl.getUsername().concat(EMAIL_SUFFIX),
@@ -138,7 +137,6 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			}
 			
 		} catch (Exception e) {
-			logger.info("here4");
 			e.printStackTrace();
 			logger.error(ERROR_REGISTER + e.getMessage());
 
