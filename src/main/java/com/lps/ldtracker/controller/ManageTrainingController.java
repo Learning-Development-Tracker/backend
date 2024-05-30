@@ -1,4 +1,4 @@
-﻿package com.lps.ldtracker.controller;
+package com.lps.ldtracker.controller;
 
 import java.util.List;
 

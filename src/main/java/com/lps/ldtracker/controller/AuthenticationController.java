@@ -1,4 +1,4 @@
-﻿package com.lps.ldtracker.controller;
+package com.lps.ldtracker.controller;
 
 import static com.lps.ldtracker.constants.LdTrackerConstants.AUTH_SUCCESS;
 import static com.lps.ldtracker.constants.LdTrackerConstants.ERROR;
