@@ -43,7 +43,7 @@ public class ResourceDataServiceImpl implements ResourceDataService, RealSession
 				ResourceDataDto res = new ResourceDataDto();
 				res.setMemberId((String) result[0]);
 				res.setMemberName((String) result[1]);
-				res.setEmployeeNum((String) result[2]);
+				res.setEmployeeNum((Integer) result[2]);
 				res.setRoleName((String) result[3]);
 				res.setTeamName((String) result[4]);
 				res.setCareerStep((String) result[5]);
@@ -55,10 +55,13 @@ public class ResourceDataServiceImpl implements ResourceDataService, RealSession
 				res.setStartDate((Date) result[11]);
 				res.setDueDate((Date) result[12]);
 				res.setStatus((String) result[13]);		
-//				res.setForCertification((String) result[6]);
-//				res.setUpcomingCertication((String) result[7]);			
-//				res.setOngoingTrainings((String) result[9]);
-//				res.setOverdueCertifications((String) result[10]);				
+				res.setCertId((String) result[14]);
+				res.setTrainingId((String) result[15]);
+				res.setCertFlag(result[16] != null ? (Boolean) result[16] : false);
+//				res.setForCertification((String) result[16]);
+//				res.setUpcomingCertication((String) result[17]);	
+//				res.setDelayed((String) result[18]);	
+				res.setOngoingTrainings((String) result[20]);
 				resList.add(res);
 			});
 		} catch (Exception e) {
