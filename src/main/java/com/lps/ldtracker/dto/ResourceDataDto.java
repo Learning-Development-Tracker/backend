@@ -9,7 +9,7 @@ public class ResourceDataDto {
 	
 	private String memberId;
 	private String memberName;
-	private String employeeNum;
+	private Integer employeeNum;
 	private String roleName;
 	private String teamName;
 	private String careerStep;	
@@ -21,10 +21,13 @@ public class ResourceDataDto {
 	private Date startDate;
 	private Date dueDate;
 	private String status;
+	private String certId;
+	private String trainingId;
+	private boolean certFlag;
 //	private String forCertification;
 //	private String upcomingCertication;	
-//	private String ongoingTrainings;
-//	private String overdueCertifications;
+//	private String delayed;
+	private String ongoingTrainings;
 	
 	
 
