@@ -55,7 +55,7 @@ public class SecurityConfiguration {
 		.cors(httpSecurityCorsConfigurer -> {
                 httpSecurityCorsConfigurer.configurationSource(request -> {
                     var cors = new org.springframework.web.cors.CorsConfiguration();
-                    cors.setAllowedOrigins(List.of("http://192.168.10.58:2401")); // Change to your frontend origin
+                    cors.setAllowedOrigins(List.of("http://192.168.10.58:2401","http://localhost:4200")); // Change to your frontend origin
                     cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     cors.setAllowCredentials(true);
