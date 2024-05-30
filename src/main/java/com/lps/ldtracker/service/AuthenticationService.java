@@ -1,5 +1,13 @@
 package com.lps.ldtracker.service;
 
+import static com.lps.ldtracker.constants.LdTrackerConstants.ACCOUNT_INACTIVE;
+import static com.lps.ldtracker.constants.LdTrackerConstants.MAX_PASSWORD_LENGTH;
+import static com.lps.ldtracker.constants.LdTrackerConstants.MAX_USERNAME_LENGTH;
+import static com.lps.ldtracker.constants.LdTrackerConstants.MIN_PASSWORD_LENGTH;
+import static com.lps.ldtracker.constants.LdTrackerConstants.MIN_USERNAME_LENGTH;
+import static com.lps.ldtracker.constants.LdTrackerConstants.PASSWORD_INCORRECT;
+import static com.lps.ldtracker.constants.LdTrackerConstants.USER_NOT_EXISTS;
+
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,8 +20,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lps.ldtracker.constants.LdTrackerConstants;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
 import com.lps.ldtracker.model.LoginRequest;
@@ -35,21 +41,21 @@ public class AuthenticationService {
 		String username = loginRequest.getUsername();
 	    String password = loginRequest.getPassword();
 	    
-	    if (username.length() < LdTrackerConstants.MIN_USERNAME_LENGTH || username.length() > LdTrackerConstants.MAX_USERNAME_LENGTH) {
-	        throw new AuthenticationFailedException("Username length must be between " + LdTrackerConstants.MIN_USERNAME_LENGTH + " and " + LdTrackerConstants.MAX_USERNAME_LENGTH + " characters");
+	    if (username.length() < MIN_USERNAME_LENGTH || username.length() > MAX_USERNAME_LENGTH) {
+	        throw new AuthenticationFailedException("Username length must be between " + MIN_USERNAME_LENGTH + " and " + MAX_USERNAME_LENGTH + " characters");
 	    }
 
-	    if (password.length() < LdTrackerConstants.MIN_PASSWORD_LENGTH || password.length() > LdTrackerConstants.MAX_PASSWORD_LENGTH) {
-	        throw new AuthenticationFailedException("Password length must be between " + LdTrackerConstants.MIN_PASSWORD_LENGTH + " and " + LdTrackerConstants.MAX_PASSWORD_LENGTH + " characters");
+	    if (password.length() < MIN_PASSWORD_LENGTH || password.length() > MAX_PASSWORD_LENGTH) {
+	        throw new AuthenticationFailedException("Password length must be between " + MIN_PASSWORD_LENGTH + " and " + MAX_PASSWORD_LENGTH + " characters");
 	    }
 		
 		var userDtl = userDtlRepository.findByUserName(username)
 			.orElseThrow(() -> {
-		        throw new AuthenticationFailedException("User not found");
+		        throw new AuthenticationFailedException(USER_NOT_EXISTS);
 		    });
 		
 		if (Boolean.FALSE.equals(userDtl.getIsActive())) {
-            throw new AuthenticationFailedException("Your account is inactive");
+            throw new AuthenticationFailedException(ACCOUNT_INACTIVE);
 		}
 		
 		try {
@@ -60,7 +66,8 @@ public class AuthenticationService {
 		        )
 		    );
 		} catch (AuthenticationException authenticationException) {
-			throw new AuthenticationFailedException(LdTrackerConstants.USER_INCORRECT);
+			logger.error("username paswword auth exception",authenticationException);
+			throw new AuthenticationFailedException(PASSWORD_INCORRECT);
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.findAndRegisterModules();
