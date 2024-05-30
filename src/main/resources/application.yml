@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: dev
   datasource:
     url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     username: ltddbadmin
@@ -33,6 +33,19 @@ spring:
           auth: true
           starttls:
             enable: true
+            
+      verify:
+         host: http://localhost:80
+         login: http://localhost:4200/login
+upload:
+   files:
+    path: C:/temp/files/
+    extensions: jpg, jpeg, png, gif
+
+servlet:
+  multipart:
+    max-file-size: 1000MB
+    max-request-size: 2000MB
 server:
   port: 80
 management:
