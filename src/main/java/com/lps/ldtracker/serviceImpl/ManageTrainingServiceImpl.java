@@ -37,6 +37,7 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	private static final String SP_SETTRAININGLINKS = "sp_setTrainingLinks";
 	private static final String SP_DELETETRAINING = "sp_deleteTraining";
 	private static final String SP_GETTRAININGLINKS = "sp_getTrainingLinks";
+	private static final String SP_GETTRAININGSBYUSER = "sp_getTrainingsbyUser";
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -267,6 +268,35 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	    System.out.println(trLinksList);
 	    return trLinksList;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ManageTrainingDto> getTrainingsbyUser() { 
+		List<ManageTrainingDto> resList = new ArrayList<ManageTrainingDto>();
+		Session session = getRealSession(sessionFactory);
+		try {
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETTRAININGSBYUSER);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+			    ManageTrainingDto res = new ManageTrainingDto();
+			    res.setId((String) result[0]);
+			    res.setTrainingName((String) result[1]); 
+			    res.setDescription((String) result [2]);
+			    res.setCertification((Boolean) result [3]);
+			    res.setIsRequired((Boolean) result[4]);
+			    res.setDueDate((Date) result[5]);
+			    resList.add(res);		
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
+		return resList;
+		
+		
+	}	
 	
 }
 
