@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: test
   datasource:
     url: jdbc:sqlserver://ltd-db-server.database.windows.net:1433;database=LTD_DB;user=ltddbadmin@ltd-db-server;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     username: ltddbadmin
