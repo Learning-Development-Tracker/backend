@@ -137,7 +137,7 @@ public class ResourceImpl implements ResourceService{
 			Result result = new Result();
 			Optional <Resource> resource = resourceRepository.findByMemberId(id); 
 			if (!resource.isPresent()) {
-				result.setMessage(LdTrackerConstants.USER_DOES_NOT_EXISTS);
+				result.setMessage(LdTrackerConstants.USER_NOT_EXISTS);
 				result.setStatus(LdTrackerConstants.ERROR);
 				return result;
 			}

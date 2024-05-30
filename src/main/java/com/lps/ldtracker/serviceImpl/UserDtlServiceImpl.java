@@ -19,9 +19,9 @@ import static com.lps.ldtracker.constants.LdTrackerConstants.SUCCESS;
 import static com.lps.ldtracker.constants.LdTrackerConstants.SUCCESS_PASSWORD_UPDATE;
 import static com.lps.ldtracker.constants.LdTrackerConstants.USER;
 import static com.lps.ldtracker.constants.LdTrackerConstants.USER_ALREADY_EXISTS;
-import static com.lps.ldtracker.constants.LdTrackerConstants.USER_DOES_EXISTS;
-import static com.lps.ldtracker.constants.LdTrackerConstants.USER_DOES_NOT_EXISTS;
+import static com.lps.ldtracker.constants.LdTrackerConstants.USER_EXISTS;
 import static com.lps.ldtracker.constants.LdTrackerConstants.USER_NAME;
+import static com.lps.ldtracker.constants.LdTrackerConstants.USER_NOT_EXISTS;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.logging.log4j.util.Strings;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.procedure.ProcedureCall;
@@ -126,9 +125,6 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 				UserDtl savedUserDtl = userDtlRepository.save(userBuilder);
 				ConfirmationDetail confirmation = new ConfirmationDetail(savedUserDtl);
 				confirmationRepository.save(confirmation);
-				logger.info("username: {}", savedUserDtl.getUsername());
-				logger.info("password: {}", savedUserDtl.getPassword());
-				logger.info("email: {}", savedUserDtl.getUsername().concat(EMAIL_SUFFIX));
 				emailService.sendHtmlEmail(
 						savedUserDtl.getUsername(), 
 						savedUserDtl.getUsername().concat(EMAIL_SUFFIX),
@@ -146,7 +142,6 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			}
 			
 		} catch (Exception e) {
-			logger.info("here4");
 			e.printStackTrace();
 			logger.error(ERROR_REGISTER + e.getMessage());
 
@@ -166,11 +161,11 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 		}
 		if(uDtl) {
 			result.setData(uDtl);
-			result.setMessage(USER_DOES_EXISTS);
+			result.setMessage(USER_EXISTS);
 			result.setStatus(SUCCESS);
 		} else {
 			result.setData(uDtl);
-			result.setMessage(USER_DOES_NOT_EXISTS);
+			result.setMessage(USER_NOT_EXISTS);
 			result.setStatus(ERROR);						
 		}		
 		return result ;
@@ -180,7 +175,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { 
 		return userDtlRepository.findByUserName(email)
 			.map(UserRegistrationDetails::new)
-			.orElseThrow(()-> new UsernameNotFoundException(USER_DOES_NOT_EXISTS));
+			.orElseThrow(()-> new UsernameNotFoundException(USER_NOT_EXISTS));
 	}
 
 	@Override
@@ -217,7 +212,7 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 		List<LdTrackerError> errors = new ArrayList<LdTrackerError>();
 		Optional<UserDtl> user = this.findByUserName(request.username());
 			if (!user.isPresent()) {
-				errors.add(new LdTrackerError(INVALID_USERNAME, USER_DOES_NOT_EXISTS));
+				errors.add(new LdTrackerError(INVALID_USERNAME, USER_NOT_EXISTS));
 				result.setErrors(errors);
 				result.setStatus(ERROR);
 				return result;
