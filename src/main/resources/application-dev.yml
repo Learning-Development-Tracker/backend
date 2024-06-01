@@ -33,6 +33,9 @@ spring:
       verify:
          host: http://localhost:80
          login: http://localhost:4200/login
+   output:
+      ansi:
+         enabled: ALWAYS
 upload:
    files:
      path: C:/temp/files/
