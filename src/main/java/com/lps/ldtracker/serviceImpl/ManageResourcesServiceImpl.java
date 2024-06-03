@@ -1,5 +1,5 @@
 package com.lps.ldtracker.serviceImpl;
-
+import java.nio.charset.StandardCharsets;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -18,6 +18,8 @@ import com.lps.ldtracker.model.MemberCertDtl;
 import com.lps.ldtracker.model.ViewTrainingDetail;
 import com.lps.ldtracker.service.ApproverService;
 import com.lps.ldtracker.service.ManageResourcesService;
+import com.lps.ldtracker.model.CertDetail;
+import com.lps.ldtracker.model.UserDetail;
 
 import jakarta.persistence.ParameterMode;
 
@@ -27,6 +29,10 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	private static final String SP_GETRESOURCELIST = "sp_getResourceList";
 	private static final String SP_GETVIEWTRAININGDETAILS = "sp_getTrainingDetails";
 	private static final String SP_GETMEMBERCERTIFICATION = "sp_getMemberCertification";
+	private static final String SP_GETUSERINFO = "sp_getUserInfo";
+	private static final String SP_GETCERTDETAILLIST = "sp_getCertificationDetails";
+	private static final String SP_GETCERTPERCERTNAME = "sp_getCertPerCertName"; 
+	private static final String SP_GETCERTPERTEAM = "sp_getCertPerTeam";
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -134,5 +140,110 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 		}
 		return certDtl;
 	}
+		
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<UserDetail> getUserById(String id) {
+
+	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    try  {
+	    		Session session = getRealSession(sessionFactory);
+	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
+	            storedProcedureCall.registerStoredProcedureParameter("MemberID", String.class, ParameterMode.IN);
+	            storedProcedureCall.setParameter("MemberID", id);
+	            List<Object[]> recordList = storedProcedureCall.getResultList();
+	                recordList.forEach(result -> {
+	                    UserDetail res = new UserDetail();
+	                    res.setLastName((String) result[0]);
+	                    res.setFirstName((String) result[1]);
+	                    res.setMiddleName((String) result[2]);
+	                    res.setSuffix((String) result[3]);
+	                    res.setGender((String) result[8]);
+	                    res.setEmailAddress((String) result[9]);
+	                    res.setCareerStep((String) result[10]);
+	                    res.setEmployeeID((int) result[11]);
+	                    res.setRegion((String) result[4]);
+	                    res.setRoles((String) result[5]);
+	                    res.setTeams((String) result[6]);
+	                    res.setEmploymentStatus((String) result[7]);
+	                    resList.add(res);
+	                });
+	        
+	    } catch (Exception e) {
+//	        logger.error("Error occurred while fetching user details: " + e.getMessage(), e);
+	    }
+	    return resList;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CertDetail> getCertDetailList() {
+	    List<CertDetail> certDetailList = new ArrayList<>();
+	    try {
+	        Session session = getRealSession(sessionFactory);
+	        ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTDETAILLIST);
+	        List<Object[]> recordList = storedProcedureCall.getResultList();
+	        recordList.forEach(result -> {
+	            CertDetail certDetail = new CertDetail();
+	            certDetail.setEmployeeNum((Integer) result[0]);
+	            certDetail.setName((String) result[1]);
+	            certDetail.setTeamName((String) result[2]);
+	            certDetail.setCertName((String) result[3]);
+	            certDetail.setCertLink((String) result[4]);
+	            certDetail.setExpiryDate((Date) result[5]);
+	            certDetail.setStatus((String) result[6]);
+//	            byte[] fileContentBytes = (byte[]) result[7];
+//	            String fileContentString = new String(fileContentBytes, StandardCharsets.UTF_8);
+	            certDetail.setFileContent((byte[]) result[7]);
+	            certDetailList.add(certDetail);
+	        });
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return certDetailList;
+	}	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+    public List<CertDetail> getCertPerCertName() {
+        List<CertDetail> certDetailList = new ArrayList<>();
+        try {
+        	Session session = getRealSession(sessionFactory);
+            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTPERCERTNAME);
+            List<Object[]> recordList = storedProcedureCall.getResultList();
+            recordList.forEach(result -> {
+                CertDetail certDetail = new CertDetail();
+                certDetail.setCertId((String) result[0]);
+                certDetail.setCertName((String) result[1]);
+                // Map other fields if needed
+                certDetailList.add(certDetail);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return certDetailList;
+    }
+	
+	@Override
+	@SuppressWarnings("unchecked")
+    public List<CertDetail> getCertPerTeam() {
+        List<CertDetail> certDetailList = new ArrayList<>();
+        try {
+        	Session session = getRealSession(sessionFactory);
+            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTPERTEAM);
+            List<Object[]> recordList = storedProcedureCall.getResultList();
+            recordList.forEach(result -> {
+                CertDetail certDetail = new CertDetail();
+                certDetail.setTeamId((String) result[0]);
+                certDetail.setTeamName((String) result[1]);
+                certDetail.setTeamCode((String) result[2]);
+                // Map other fields if needed
+                certDetailList.add(certDetail);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return certDetailList;
+    }
 
 }
