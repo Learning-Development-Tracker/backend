@@ -16,6 +16,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,7 +26,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 @Configuration
@@ -43,9 +46,10 @@ public class SecurityConfiguration {
 		"/api/v1/forgot-password/**",
 		"api/v1/admin/**",
 		"/api/v1/resources/**",
-//		"/h2-console/**"
  		"/actuator/**",
-		"/api/v1/approver/**"
+		"/api/v1/approver/**",
+		"/api/v1/reports/**",
+		"/api/v1/trainings/**"
     };
 	
 	@Bean

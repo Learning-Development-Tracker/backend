@@ -5,8 +5,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
-import java.sql.Timestamp;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,7 +27,6 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	private static final String SP_GETRESOURCELIST = "sp_getResourceList";
 	private static final String SP_GETVIEWTRAININGDETAILS = "sp_getTrainingDetails";
 	private static final String SP_GETMEMBERCERTIFICATION = "sp_getMemberCertification";
-
 	
 	@Autowired
 	SessionFactory sessionFactory;
