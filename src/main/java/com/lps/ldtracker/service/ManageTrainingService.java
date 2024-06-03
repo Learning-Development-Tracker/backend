@@ -15,5 +15,6 @@ public interface ManageTrainingService {
 	public List<TrainingLinksDto> saveTrainingLinks(List<TrainingLinksDto> list);
 	String deleteTraining(String trainingId);
 	List<TrainingLinksDto> getTrainingLinks(String trainingId);
+	List<ManageTrainingDto> getTrainingsbyUser();
 
 }

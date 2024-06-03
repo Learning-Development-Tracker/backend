@@ -1,7 +1,5 @@
 package com.lps.ldtracker.controller;
 
-import java.util.List;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +31,10 @@ import com.lps.ldtracker.service.ViewCalendarScheduleService;
 import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.dto.ViewCalenderScheduleDto;
+
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -143,4 +143,18 @@ public class ManageTrainingController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
+	@GetMapping(value="/getTrainingsbyUser")
+	public ResponseEntity<Result> getTrainingsbyUser() {
+		System.out.println("Get Trainings by User - Start");
+		Result result = new Result();
+		try {
+			List<ManageTrainingDto> trainingDtl =  this.manageTrainingService.getTrainingsbyUser();
+			result.setData(trainingDtl);
+			result.setStatus("SUCCESS");
+		} catch (Exception e) {
+			result.setStatus("FAILED");
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

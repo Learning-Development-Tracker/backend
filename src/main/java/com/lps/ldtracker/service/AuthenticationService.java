@@ -28,6 +28,8 @@ public class AuthenticationService {
 	private final UserDtlRepository userDtlRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 	
 	public AuthenticationResponse login(LoginRequest loginRequest) throws AuthenticationFailedException, JsonProcessingException {
 		String username = loginRequest.getUsername();
