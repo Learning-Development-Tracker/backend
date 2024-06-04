@@ -13,36 +13,38 @@ spring:
        naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   mail:
-   host: smtp.gmail.com
-   port: 587
-   username: lpshris1@gmail.com
-   password: xcmhecferfilhhmi
-   default-encoding: UTF-8
-   properties:
-      mail: 
-        mime:
-           charset: UTF
-        smtp: 
-           writetimeout: 10000
-           connectiontimeout: 10000
-           timeout: 10000
-           auth: true
-           starttls:
-               enable: true
-               required: true
-               
-   upload:
-     files:
-       path: C:/temp/files/
-       extensions: jpg, jpeg, png, gif
+    host: smtp.gmail.com
+    port: 587
+    username: lpshris1@gmail.com
+    password: xcmhecferfilhhmi
+    default-encoding: UTF-8
+    properties:
+       mail: 
+         mime:
+            charset: UTF
+         smtp: 
+            writetimeout: 10000
+            connectiontimeout: 10000
+            timeout: 10000
+            auth: true
+            starttls:
+                enable: true
+                required: true
+    verify:
+       host: https://192.168.10.58:9191
+       login: https://192.168.10.58:4200/login  
+  output:
+    ansi:
+       enabled: ALWAYS
+upload:
+   files:
+      path: C:/temp/files/
+      extensions: jpg, jpeg, png, gif
 
-   servlet:
-     multipart:
-       max-file-size: 1000MB
-       max-request-size: 2000MB
+servlet:
+   multipart:
+      max-file-size: 1000MB
+      max-request-size: 2000MB
 
-   verify:
-      host: https://192.168.10.58:9191
-      login: https://192.168.10.58:4200/login  
 server:
   port: 9191
