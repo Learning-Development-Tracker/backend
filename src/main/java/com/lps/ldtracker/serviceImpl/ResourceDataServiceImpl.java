@@ -58,10 +58,11 @@ public class ResourceDataServiceImpl implements ResourceDataService, RealSession
 				res.setCertId((String) result[14]);
 				res.setTrainingId((String) result[15]);
 				res.setCertFlag(result[16] != null ? (Boolean) result[16] : false);
-//				res.setForCertification((String) result[16]);
-//				res.setUpcomingCertication((String) result[17]);	
-//				res.setDelayed((String) result[18]);	
+				res.setForCertification((String) result[17]);
+				res.setUpcomingCertication((String) result[18]);	
+				res.setDelayed((String) result[19]);	
 				res.setOngoingTrainings((String) result[20]);
+				res.setProgressId((String) result[21]);
 				resList.add(res);
 			});
 		} catch (Exception e) {
