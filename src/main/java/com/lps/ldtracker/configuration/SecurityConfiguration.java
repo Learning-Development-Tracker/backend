@@ -49,7 +49,8 @@ public class SecurityConfiguration {
  		"/actuator/**",
 		"/api/v1/approver/**",
 		"/api/v1/reports/**",
-		"/api/v1/trainings/**"
+		"/api/v1/trainings/**",
+ 		"/actuator/**"
     };
 	
 	@Bean
@@ -69,7 +70,6 @@ public class SecurityConfiguration {
 			.csrf(AbstractHttpConfigurer::disable)
 			.headers(httpSecurityHeadersConfigurer -> {
 			    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
-			    httpSecurityHeadersConfigurer.frameOptions().sameOrigin();
 			}) 
 			.authorizeHttpRequests(request -> request
 				.requestMatchers(WHITE_LIST_URL)

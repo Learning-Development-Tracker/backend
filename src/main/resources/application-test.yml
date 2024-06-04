@@ -48,3 +48,11 @@ servlet:
 
 server:
   port: 9191
+management:
+  server:
+    endpoint:
+      shutdown: 
+      enabled: true
+      web:
+      exposure:
+        include: "*"
