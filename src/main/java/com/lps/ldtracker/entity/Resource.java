@@ -47,7 +47,7 @@ public class Resource implements UserDetails{
 	private String gender;
 	
 	@Column(name = "EMPLOYEE_NUM")
-	private String empId;
+	private Integer empId;
 	
 	@Column(name = "EMAIL_ADDRESS")
 	private String emailAddress;

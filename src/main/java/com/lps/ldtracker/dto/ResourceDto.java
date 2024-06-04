@@ -21,7 +21,7 @@ public class ResourceDto {
 	private String middlename;
 	private String suffix;
 	private String gender;
-	private String empId;
+	private Integer empId;
 	private String emailAddress;
 	private String region;
 	private Boolean isEnabled = false;
