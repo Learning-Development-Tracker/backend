@@ -1,5 +1,7 @@
 package com.lps.ldtracker.configuration;
 
+import static com.lps.ldtracker.constants.LdTrackerConstants.USER_NOT_EXISTS;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +27,7 @@ public class ApplicationConfiguration {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return username -> userDtlRepository.findByUserName(username)
-			.orElseThrow(() -> new UsernameNotFoundException(LdTrackerConstants.USER_DOES_NOT_EXISTS));
+			.orElseThrow(() -> new UsernameNotFoundException(USER_NOT_EXISTS));
 	}
 	
 	@Bean

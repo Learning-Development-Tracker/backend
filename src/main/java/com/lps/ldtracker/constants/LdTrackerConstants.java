@@ -54,8 +54,8 @@ public class LdTrackerConstants {
 	public static final String ACCOUNT_VERIFIED = "Account verified click <a href=\"%1$s\">here</a> to login.";
 	
 	//Forgot PW
-	public static final String USER_DOES_EXISTS = "User found.";
-	public static final String USER_DOES_NOT_EXISTS = "User not found.";
+	public static final String USER_EXISTS = "Username found.";
+	public static final String USER_NOT_EXISTS = "Username not found.";
 	public static final String YOU_HAVE_NOT_SENT_OTP = "You have not sent otp";
 	public static final String EXPIRED_OTP = "Expired otp";
 	public static final String INVALID_OTP = "Invalid otp";
@@ -63,14 +63,15 @@ public class LdTrackerConstants {
 	public static final String SUCCESS_PASSWORD_UPDATE= "Password successfully updated";
 	public static final String AUTH_FAILED= "Authentication failed";
 	public static final String AUTH_SUCCESS= "Authentication success";
-	public static final String REQ_FIELD_MISSING= "Required field missing";
-	public static final String REQ_PASSWORD_LENGTH= "Please enter a password between 8 and 32 characters in length";
-	public static final String USER_INCORRECT = "Incorrect username or password";
+	public static final String FIELD_MISSING= "Required field missing";
+	public static final String PASSWORD_LENGTH= "Please enter a password between 10 and 20 characters in length";
+	public static final String PASSWORD_INCORRECT = "Incorrect password";
+	public static final String ACCOUNT_INACTIVE = "Your account is inactive";
 	
 	public static final Integer MIN_USERNAME_LENGTH = 5;
-	public static final Integer MAX_USERNAME_LENGTH = 32;
-	public static final Integer MIN_PASSWORD_LENGTH = 5;
-	public static final Integer MAX_PASSWORD_LENGTH = 32;
+	public static final Integer MAX_USERNAME_LENGTH = 15;
+	public static final Integer MIN_PASSWORD_LENGTH = 10;
+	public static final Integer MAX_PASSWORD_LENGTH = 20;
 	
 	//Access level
 	public static final String ADMIN = "Admin";
