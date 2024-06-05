@@ -14,7 +14,6 @@ public interface UserDtlService {
 	public Result registerUser(RegistrationRequest request);
 	Optional<UserDtl> findByUserName(String username);
 	public Result resetPassword(RegistrationRequest request);
-	public List<UserDetail> getUserById(String id);
 	public Result isExistUsername(LoginRequest request);
 	public String verifyToken(String token);
 	public String refreshToken(String username);
