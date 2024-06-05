@@ -31,8 +31,8 @@ spring:
                 enable: true
                 required: true
     verify:
-       host: https://192.168.10.58:9191
-       login: https://192.168.10.58:4200/login  
+       host: https://192.168.10.58:2402
+       login: https://192.168.10.58:2401/login  
   output:
     ansi:
        enabled: ALWAYS
@@ -47,7 +47,7 @@ servlet:
       max-request-size: 2000MB
 
 server:
-  port: 9191
+  port: 2402
 management:
   server:
     endpoint:
