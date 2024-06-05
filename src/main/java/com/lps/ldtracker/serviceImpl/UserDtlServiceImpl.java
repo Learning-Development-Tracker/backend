@@ -45,6 +45,8 @@ import org.springframework.stereotype.Service;
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.entity.AccessLevel;
 import com.lps.ldtracker.entity.ConfirmationDetail;
+import com.lps.ldtracker.entity.RoleDtl;
+import com.lps.ldtracker.entity.SkillsDetail;
 import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -52,6 +54,7 @@ import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.model.UserDetail;
 import com.lps.ldtracker.model.ValidationParamCollection;
 import com.lps.ldtracker.repository.AccessLevelRepository;
 import com.lps.ldtracker.repository.ConfirmationRepository;
@@ -86,6 +89,8 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	private final ErrorHandlingService errorService;
 	
 	private final ResultService resultService;
+	
+	private static final String SP_GETUSERROLES = "sp_getUserRoles";
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -259,5 +264,69 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			    });
 		return jwtService.generateRefreshToken(userDtl);
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<UserDetail> getUserById(String id) {
+
+	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    try  {
+	    		Session session = getRealSession(sessionFactory);
+	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
+	            storedProcedureCall.registerStoredProcedureParameter(MEMBERID, String.class, ParameterMode.IN);
+	            storedProcedureCall.setParameter(MEMBERID, id);
+	            List<Object[]> recordList = storedProcedureCall.getResultList();
+	                recordList.forEach(result -> {
+	                    UserDetail res = new UserDetail();
+	                    // Map the retrieved attributes to UserDetail object
+	                    res.setLastName((String) result[0]);
+	                    res.setFirstName((String) result[1]);
+	                    res.setMiddleName((String) result[2]);
+	                    res.setSuffix((String) result[3]);
+	                    res.setGender((String) result[8]);
+	                    res.setEmailAddress((String) result[9]);
+	                    res.setCareerStep((String) result[10]);
+	                    res.setEmployeeID((int) result[11]);
+	                    res.setRegion((String) result[4]);
+	                    // Assuming role and team information are available
+	                    res.setRoles((String) result[5]);
+	                    res.setTeams((String) result[6]);
+	                    // Assuming employment status is available as a boolean
+	                    res.setEmploymentStatus((String) result[7]);
+	                    resList.add(res);
+	                });
+	        
+	    } catch (Exception e) {
+	        logger.error(ERROR_FETCH + e.getMessage(), e);
+	    }
+	    return resList;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	
+	public List<RoleDtl> getUserRoles() { 
+		Session session = getRealSession(sessionFactory);
+		List<RoleDtl> skillsList = new ArrayList<RoleDtl>();
+		try {
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERROLES);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+				RoleDtl res = new RoleDtl();
+			    res.setRoleId((String) result[0]);
+			    res.setRoleName((String) result[1]);    
+			    res.setRoleDesc((String) result[2]);
+			    skillsList.add(res);		
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
+		return skillsList;
+	}
+
 	
 }
