@@ -47,7 +47,7 @@ servlet:
       max-request-size: 2000MB
 
 server:
-  port: 9191
+  port: 2402
 management:
   server:
     endpoint:
