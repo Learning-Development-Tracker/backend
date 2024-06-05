@@ -51,7 +51,8 @@ public class SecurityConfiguration {
  		"/actuator/**",
 		"/api/v1/approver/**",
  		"/api/v1/reports/**",
- 		"/api/v1/trainings/**"
+ 		"/api/v1/users/**"
+ 		
     };
 	
 	@Bean
