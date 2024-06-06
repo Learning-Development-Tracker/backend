@@ -91,11 +91,11 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 				res.setStatus((String) result[2]);
 				res.setDuration((String) result[3]);
 				res.setProgressNumber((Integer) result[4]);
-				res.setDate_started((Timestamp) result[5]);
-				res.setDate_completed((Timestamp) result[6]);
+				res.setDate_started((String) result[5]);
+				res.setDate_completed((String) result[6]);
 				res.setEstimated_hours((Integer) result[7]);
-				res.setDue_date((Timestamp) result[8]);
-				res.setTarget_date((Timestamp) result[9]);
+				res.setDue_date((String) result[8]);
+				res.setTarget_date((String) result[9]);
 				res.setLink((String) result[10]);
 				res.setRemarks((String) result[11]);
 				res.setDescription((String) result[12]);
