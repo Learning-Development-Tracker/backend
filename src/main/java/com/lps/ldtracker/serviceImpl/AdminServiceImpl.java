@@ -26,8 +26,9 @@ public class AdminServiceImpl implements AdminService, RealSessionAware {
 	@SuppressWarnings("unchecked")
 	public List<SkillDetail> getMemberSkillSet(String strMemberID){
 		List<SkillDetail> sdList = new ArrayList<SkillDetail>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
+			
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETMEMBERSKILLSET);
 			storedProcedureCall.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
 			storedProcedureCall.setParameter("P_MEMBERID", strMemberID);
@@ -41,7 +42,12 @@ public class AdminServiceImpl implements AdminService, RealSessionAware {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
+
 		return sdList;
 		
 	}
