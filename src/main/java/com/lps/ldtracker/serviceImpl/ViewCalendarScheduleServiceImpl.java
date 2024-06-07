@@ -25,8 +25,8 @@ public class ViewCalendarScheduleServiceImpl implements ViewCalendarScheduleServ
 	@SuppressWarnings("unchecked")
 	public List<ViewCalenderScheduleDto> getViewCalendarSchedule(){
 		List<ViewCalenderScheduleDto> csList = new ArrayList<ViewCalenderScheduleDto>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCALENDARSCHEDULE);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -40,6 +40,10 @@ public class ViewCalendarScheduleServiceImpl implements ViewCalendarScheduleServ
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		return csList;
 		
