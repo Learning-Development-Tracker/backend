@@ -18,6 +18,7 @@ import com.lps.ldtracker.dto.ManageTrainingDto;
 import com.lps.ldtracker.dto.TrainingLinksDto;
 import com.lps.ldtracker.entity.Training_Dtl;
 import com.lps.ldtracker.model.MemberInfo;
+import com.lps.ldtracker.model.SkillSet;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.service.ManageTrainingService;
 
@@ -38,6 +39,9 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	private static final String SP_DELETETRAINING = "sp_deleteTraining";
 	private static final String SP_GETTRAININGLINKS = "sp_getTrainingLinks";
 	private static final String SP_GETTRAININGSBYUSER = "sp_getTrainingsbyUser";
+	private static final String SP_GETTRAININGSBYCRITERIA = "sp_getTrainingsbyCriteria";
+	private static final String SP_SETUSERTRAININGS = "sp_setUserTrainings";
+	
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -294,9 +298,84 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
     		}
     	}
 		return resList;
-		
-		
 	}	
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<ManageTrainingDto> searchTrainingByCriteria(String trainingName, String skillName, String startDate, String endDate) {
+	    List<ManageTrainingDto> trainingList = new ArrayList<ManageTrainingDto>();
+	    Session session = getRealSession(sessionFactory);
+	    try {
+	        ProcedureCall sp = session.createStoredProcedureCall(SP_GETTRAININGSBYCRITERIA);
+	        sp.registerStoredProcedureParameter("P_TRAININGNAME", String.class, ParameterMode.IN);
+	        sp.registerStoredProcedureParameter("P_SKILLNAME", String.class, ParameterMode.IN);
+	        sp.registerStoredProcedureParameter("P_STARTDT", String.class, ParameterMode.IN);
+	        sp.registerStoredProcedureParameter("P_ENDDT", String.class, ParameterMode.IN);
+	        
+	        sp.setParameter("P_TRAININGNAME", trainingName);
+	        sp.setParameter("P_SKILLNAME", skillName);
+	        sp.setParameter("P_STARTDT", startDate);
+	        sp.setParameter("P_ENDDT", endDate);
+	        
+	        List<Object[]> recordList = sp.getResultList();
+	        recordList.forEach(result -> {
+	            ManageTrainingDto tr = new ManageTrainingDto();
+	            tr.setTrainingId((String) result[0]);
+	            tr.setTrainingName((String) result[1]);
+	            tr.setDescription((String) result[2]);
+	            tr.setCertification((Boolean) result[3]);
+	            tr.setTrainingType((String) result[4]);
+	            tr.setStartDate((Date) result [5]);
+	            tr.setDueDate((Date) result [6]);
+
+	            trainingList.add(tr);
+	        });
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
+	    System.out.println(trainingList);
+	    return trainingList;
+	}
+	
+    @Override
+    public SkillSet registerUserTraining(SkillSet userTraining) {
+    	Session session = getRealSession(sessionFactory);
+        try {
+            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_SETUSERTRAININGS);
+            storedProcedureCall.registerStoredProcedureParameter("P_SSID", String.class, ParameterMode.IN);
+            storedProcedureCall.registerStoredProcedureParameter("P_MEMBERID", String.class, ParameterMode.IN);
+            storedProcedureCall.registerStoredProcedureParameter("P_TRAININGID", String.class, ParameterMode.IN);
+            storedProcedureCall.registerStoredProcedureParameter("P_SKILLID", Date.class, ParameterMode.IN);
+            storedProcedureCall.registerStoredProcedureParameter("OUT_SSID", Date.class, ParameterMode.OUT);
+            
+
+            storedProcedureCall.setParameter("P_SSID", userTraining.getSsId());
+            storedProcedureCall.setParameter("P_MEMBERID", userTraining.getMemberId());
+            storedProcedureCall.setParameter("P_TRAININGID", userTraining.getTrainingId());
+            storedProcedureCall.setParameter("P_SKILLID", userTraining.getSkillId());
+
+            storedProcedureCall.execute();
+            
+            //saveTrainingLinks(trainingDetails.getTrainingLinks());
+            String strSsId = (String) storedProcedureCall.getOutputs().getOutputParameterValue("OUT_SSID");
+            if(strSsId != null) {
+            	userTraining.setSsId(strSsId);
+            }
+            
+            System.out.println("strTrainingID " + strSsId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
+        return userTraining;
+    }
 	
 }
 

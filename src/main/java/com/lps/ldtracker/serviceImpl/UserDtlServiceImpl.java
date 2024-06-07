@@ -45,6 +45,8 @@ import org.springframework.stereotype.Service;
 import com.lps.ldtracker.configuration.RealSessionAware;
 import com.lps.ldtracker.entity.AccessLevel;
 import com.lps.ldtracker.entity.ConfirmationDetail;
+import com.lps.ldtracker.entity.RoleDtl;
+import com.lps.ldtracker.entity.SkillsDetail;
 import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.exception.AuthenticationFailedException;
 import com.lps.ldtracker.model.AuthenticationResponse;
@@ -87,6 +89,8 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	private final ErrorHandlingService errorService;
 	
 	private final ResultService resultService;
+	
+	private static final String SP_GETUSERROLES = "sp_getUserRoles";
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -297,5 +301,32 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 			    });
 		return jwtService.generateRefreshToken(userDtl);
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	
+	public List<RoleDtl> getUserRoles() { 
+		Session session = getRealSession(sessionFactory);
+		List<RoleDtl> skillsList = new ArrayList<RoleDtl>();
+		try {
+			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERROLES);
+			List<Object[]> recordList = storedProcedureCall.getResultList();
+			recordList.forEach(result -> {
+				RoleDtl res = new RoleDtl();
+			    res.setRoleId((String) result[0]);
+			    res.setRoleName((String) result[1]);    
+			    res.setRoleDesc((String) result[2]);
+			    skillsList.add(res);		
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
+		return skillsList;
+	}
+
 	
 }

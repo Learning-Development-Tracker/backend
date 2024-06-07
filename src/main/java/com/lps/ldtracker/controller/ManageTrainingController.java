@@ -1,7 +1,9 @@
 package com.lps.ldtracker.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lps.ldtracker.constants.LdTrackerConstants;
@@ -25,6 +28,7 @@ import com.lps.ldtracker.model.LdTrackerError;
 import com.lps.ldtracker.model.MemberInfo;
 import com.lps.ldtracker.model.MemberInfo;
 import com.lps.ldtracker.model.Result;
+import com.lps.ldtracker.model.SkillSet;
 import com.lps.ldtracker.service.ManageTrainingService;
 import com.lps.ldtracker.service.ResultService;
 import com.lps.ldtracker.service.ViewCalendarScheduleService;
@@ -157,4 +161,30 @@ public class ManageTrainingController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("/searchTraining")
+	public ResponseEntity<Map<String, List<ManageTrainingDto>>> searchTrainingByCriteria(
+	        @RequestParam(required = false) String trainingName,
+	        @RequestParam(required = false) String skillName,
+	        @RequestParam(required = false) String startDate,
+	        @RequestParam(required = false) String endDate) {
+	    
+	    List<ManageTrainingDto> trainingList = manageTrainingService.searchTrainingByCriteria(trainingName, skillName, startDate, endDate);
+	    Map<String, List<ManageTrainingDto>> response = new HashMap<>();
+	    response.put("data", trainingList);
+	    return ResponseEntity.ok(response);
+	}
+	
+    @PostMapping("/registerUserTraining")
+    public ResponseEntity<SkillSet> registerUserTraining(@RequestBody SkillSet userTraining) {
+    		System.out.println("Register User Training - Start");
+        try {
+        	SkillSet addedUserTraining = manageTrainingService.registerUserTraining(userTraining);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addedUserTraining);
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            
+        }
+    }  
 }
