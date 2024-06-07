@@ -1,3 +1,4 @@
+<!DOCTYPE configuration SYSTEM "logback.dtd">
 <configuration>
    <variable name="PATH" value="bin"/>>
    <timestamp key="timeStamp" datePattern="yyyy-MM-dd'_'HH-mm-ss.SSS"/>
