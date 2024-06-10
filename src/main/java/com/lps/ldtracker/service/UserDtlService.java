@@ -3,6 +3,7 @@ package com.lps.ldtracker.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.lps.ldtracker.entity.RoleDtl;
 import com.lps.ldtracker.entity.UserDtl;
 import com.lps.ldtracker.model.LoginRequest;
 import com.lps.ldtracker.model.RegistrationRequest;
@@ -18,4 +19,5 @@ public interface UserDtlService {
 	public Result isExistUsername(LoginRequest request);
 	public String verifyToken(String token);
 	public String refreshToken(String username);
+	public List<RoleDtl> getUserRoles();
 }

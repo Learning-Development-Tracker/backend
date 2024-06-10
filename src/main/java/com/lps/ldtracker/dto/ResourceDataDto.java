@@ -24,10 +24,11 @@ public class ResourceDataDto {
 	private String certId;
 	private String trainingId;
 	private boolean certFlag;
-//	private String forCertification;
-//	private String upcomingCertication;	
-//	private String delayed;
+	private String forCertification;
+	private String upcomingCertication;	
+	private String delayed;
 	private String ongoingTrainings;
+	private String progressId;
 	
 	
 

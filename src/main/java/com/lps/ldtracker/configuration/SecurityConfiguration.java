@@ -46,11 +46,14 @@ public class SecurityConfiguration {
 		"/api/v1/forgot-password/**",
 		"api/v1/admin/**",
 		"/api/v1/resources/**",
+		"/api/v1/trainings/**",
+		"/api/v1/skills/**",
  		"/actuator/**",
 		"/api/v1/approver/**",
 		"/api/v1/reports/**",
-		"/api/v1/trainings/**",
+		"/api/v1/users/**",
  		"/actuator/**"
+ 		
     };
 	
 	@Bean
