@@ -10,7 +10,7 @@ public class CertDetail {
     private String certLink;
     private Date expiryDate;
     private String status;
-    private byte[] fileContent;
+    private String fileContent;
     private String teamId;
     private String teamCode;
     private String certId;
@@ -98,11 +98,11 @@ public class CertDetail {
         this.status = status;
     }
 
-    public byte[] getFileContent() {
+    public String getFileContent() {
         return fileContent;
     }
 
-    public void setFileContent(byte[] fileContent) {
+    public void setFileContent(String fileContent) {
         this.fileContent = fileContent;
     }
 }
