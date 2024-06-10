@@ -144,10 +144,10 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserDetail> getUserById(String id) {
-
 	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    Session session = getRealSession(sessionFactory);
 	    try  {
-	    		Session session = getRealSession(sessionFactory);
+//	    		Session session = getRealSession(sessionFactory);
 	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
 	            storedProcedureCall.registerStoredProcedureParameter("MemberID", String.class, ParameterMode.IN);
 	            storedProcedureCall.setParameter("MemberID", id);
@@ -170,8 +170,12 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	                });
 	        
 	    } catch (Exception e) {
-//	        logger.error("Error occurred while fetching user details: " + e.getMessage(), e);
-	    }
+	    	e.printStackTrace();
+		}finally {
+			if(session!=null) {
+				session.close();
+			}
+		}
 	    return resList;
 	}
 	
@@ -179,8 +183,9 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	@SuppressWarnings("unchecked")
 	public List<CertDetail> getCertDetailList() {
 	    List<CertDetail> certDetailList = new ArrayList<>();
+	    Session session = getRealSession(sessionFactory);
 	    try {
-	        Session session = getRealSession(sessionFactory);
+//	        Session session = getRealSession(sessionFactory);
 	        ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTDETAILLIST);
 	        List<Object[]> recordList = storedProcedureCall.getResultList();
 	        recordList.forEach(result -> {
@@ -194,12 +199,17 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	            certDetail.setStatus((String) result[6]);
 //	            byte[] fileContentBytes = (byte[]) result[7];
 //	            String fileContentString = new String(fileContentBytes, StandardCharsets.UTF_8);
-	            certDetail.setFileContent((byte[]) result[7]);
+	            certDetail.setFileContent((String) result[7]);
 	            certDetailList.add(certDetail);
 	        });
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	    }finally {
+			if(session!=null) {
+				session.close();
+			}
 	    }
+	    
 	    return certDetailList;
 	}	
 	
@@ -207,8 +217,8 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	@SuppressWarnings("unchecked")
     public List<CertDetail> getCertPerCertName() {
         List<CertDetail> certDetailList = new ArrayList<>();
+        Session session = getRealSession(sessionFactory);
         try {
-        	Session session = getRealSession(sessionFactory);
             ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTPERCERTNAME);
             List<Object[]> recordList = storedProcedureCall.getResultList();
             recordList.forEach(result -> {
@@ -219,8 +229,12 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
                 certDetailList.add(certDetail);
             });
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+	        e.printStackTrace();
+	    }finally {
+			if(session!=null) {
+				session.close();
+			}
+	    }
         return certDetailList;
     }
 	
@@ -228,8 +242,8 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	@SuppressWarnings("unchecked")
     public List<CertDetail> getCertPerTeam() {
         List<CertDetail> certDetailList = new ArrayList<>();
+        Session session = getRealSession(sessionFactory);
         try {
-        	Session session = getRealSession(sessionFactory);
             ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTPERTEAM);
             List<Object[]> recordList = storedProcedureCall.getResultList();
             recordList.forEach(result -> {
@@ -241,8 +255,12 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
                 certDetailList.add(certDetail);
             });
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+	        e.printStackTrace();
+	    }finally {
+			if(session!=null) {
+				session.close();
+			}
+	    }
         return certDetailList;
     }
 
