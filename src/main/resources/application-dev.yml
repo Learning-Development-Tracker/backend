@@ -33,7 +33,7 @@ spring:
       verify:
          host: http://localhost:80
          login: http://localhost:4200/login
-   whitelist:
+   cors:
       origins: http://localhost:4200
       methods: "GET,\ POST,\ PUT,\ DELETE,\ OPTIONS"
       headers: "Content-Type,\ Authorization"

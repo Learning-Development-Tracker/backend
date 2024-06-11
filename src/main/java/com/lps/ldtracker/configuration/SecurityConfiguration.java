@@ -41,11 +41,11 @@ public class SecurityConfiguration {
 	
 	private final JwtAuthenticationFilterConfiguration jwtAuthenticationFilterConfiguration;
 	private final AuthenticationProvider authenticationProvider;
-	@Value("${spring.whitelist.origins}")
+	@Value("${spring.cors.origins}")
 	private List<String> origins;
-	@Value("${spring.whitelist.methods}")
+	@Value("${spring.cors.methods}")
 	private List<String> methods;
-	@Value("${spring.whitelist.headers}")
+	@Value("${spring.cors.headers}")
 	private List<String> headers;
 	private static final String[] WHITE_LIST_URL = {
 		"/v1/api-docs",
