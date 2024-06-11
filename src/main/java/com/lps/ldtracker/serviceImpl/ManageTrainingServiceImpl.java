@@ -99,8 +99,8 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	
 	@Override
 	public String deleteTraining(String trainingId) {
+		Session session = getRealSession(sessionFactory);
 	    try {
-	        Session session = getRealSession(sessionFactory);
 	        ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_DELETETRAINING);
 	        
 	        // Register input parameter
@@ -125,7 +125,11 @@ public class ManageTrainingServiceImpl  implements ManageTrainingService, RealSe
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return "Error occurred while deleting training record.";
-	    }
+	    } finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
 	}
 
 

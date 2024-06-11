@@ -252,8 +252,9 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	public List<UserDetail> getUserById(String id) {
 
 	    List<UserDetail> resList = new ArrayList<UserDetail>();
+	    Session session = getRealSession(sessionFactory);
 	    try  {
-	    		Session session = getRealSession(sessionFactory);
+	    		
 	            ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETUSERINFO);
 	            storedProcedureCall.registerStoredProcedureParameter(MEMBERID, String.class, ParameterMode.IN);
 	            storedProcedureCall.setParameter(MEMBERID, id);
@@ -280,7 +281,11 @@ public class UserDtlServiceImpl implements UserDtlService, UserDetailsService, R
 	        
 	    } catch (Exception e) {
 	        logger.error(ERROR_FETCH + e.getMessage(), e);
-	    }
+	    } finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
 	    return resList;
 	}
 

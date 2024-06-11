@@ -35,8 +35,8 @@ public class ResourceDataServiceImpl implements ResourceDataService, RealSession
 	public List<ResourceDataDto> getRecordList() {
 
 		List<ResourceDataDto> resList = new ArrayList<ResourceDataDto>();
+		Session session = getRealSession(sessionFactory);
 		try {
-			Session session = getRealSession(sessionFactory);
 			ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETRESOURCEDATALIST);
 			List<Object[]> recordList = storedProcedureCall.getResultList();
 			recordList.forEach(result -> {
@@ -67,7 +67,11 @@ public class ResourceDataServiceImpl implements ResourceDataService, RealSession
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} finally {
+    		if(session != null) {
+    			session.close();
+    		}
+    	}
 		return resList;
 		
 	}
