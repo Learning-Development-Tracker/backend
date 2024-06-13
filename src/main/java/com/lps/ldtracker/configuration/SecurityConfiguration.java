@@ -17,6 +17,9 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -38,7 +41,12 @@ public class SecurityConfiguration {
 	
 	private final JwtAuthenticationFilterConfiguration jwtAuthenticationFilterConfiguration;
 	private final AuthenticationProvider authenticationProvider;
-	
+	@Value("${spring.cors.origins}")
+	private List<String> origins;
+	@Value("${spring.cors.methods}")
+	private List<String> methods;
+	@Value("${spring.cors.headers}")
+	private List<String> headers;
 	private static final String[] WHITE_LIST_URL = {
 		"/v1/api-docs",
 		"/api/health",
@@ -61,9 +69,9 @@ public class SecurityConfiguration {
 		.cors(httpSecurityCorsConfigurer -> {
                 httpSecurityCorsConfigurer.configurationSource(request -> {
                     var cors = new org.springframework.web.cors.CorsConfiguration();
-                    cors.setAllowedOrigins(List.of("http://192.168.10.58:2401","http://localhost:4200")); // Change to your frontend origin
-                    cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+                    cors.setAllowedOrigins(origins); // Change to your frontend origin
+                    cors.setAllowedMethods(methods);
+                    cors.setAllowedHeaders(headers);
                     cors.setAllowCredentials(true);
                     return cors;
                 });
