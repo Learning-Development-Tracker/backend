@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ import com.lps.ldtracker.serviceImpl.ErrorHandlingService;
 import com.lps.ldtracker.repository.TrainingRepository;
 import com.lps.ldtracker.dto.ViewCalenderScheduleDto;
 
+import com.lps.ldtracker.configuration.RealSessionAware;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +48,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/trainings")
-public class ManageTrainingController {
+public class ManageTrainingController implements RealSessionAware {
 	
 	private final ResultService resultService;
 	private final ErrorHandlingService errorHandlingService;
@@ -53,6 +58,9 @@ public class ManageTrainingController {
 	
 	@Autowired
 	ViewCalendarScheduleService viewCalendarScheduleService;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 	
 	
 	@GetMapping(value="/getTrainingList")
@@ -71,9 +79,11 @@ public class ManageTrainingController {
 	
 	@DeleteMapping("/deleteTraining/{id}")
     public ResponseEntity<?> deleteTraining(@PathVariable String id) {
+		Session session = getRealSession(sessionFactory);
 		try {
 			List<LdTrackerError> errors = new ArrayList<>();
 			errorHandlingService.validateInputParametersId(id, errors);
+			
 			
 			if (!errors.isEmpty()) {
 				Result result = resultService.setResult("200", LdTrackerConstants.SUCCESS, errors, null);
@@ -87,6 +97,10 @@ public class ManageTrainingController {
 			 e.printStackTrace();
 		     // Handle other exceptions
 		     return errorHandlingService.createErrorResponse("INTERNAL_SERVER_ERROR", "An error occurred while processing the request", HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			if(session!=null) {
+				session.close();
+			}
 		}
 		
 	}
