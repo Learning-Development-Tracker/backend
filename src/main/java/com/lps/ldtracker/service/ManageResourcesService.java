@@ -5,6 +5,7 @@ import java.util.List;
 //import com.lps.ldtracker.model.ManagResourceRequest;
 import com.lps.ldtracker.dto.ManageResourceDto;
 import com.lps.ldtracker.model.CertDetail;
+import com.lps.ldtracker.model.CertPerMemberId;
 import com.lps.ldtracker.model.UserDetail;
 //import com.lps.ldtracker.model.Training_Dtl;
 import com.lps.ldtracker.model.ViewTrainingDetail;
@@ -17,6 +18,7 @@ public interface ManageResourcesService {
 	List<CertDetail> getCertPerCertName();
 	List<CertDetail> getCertPerTeam();
 	List<UserDetail> getUserById(String id);
+	List<CertPerMemberId> getCertPerMemberId(String id);
 	
 	
 }

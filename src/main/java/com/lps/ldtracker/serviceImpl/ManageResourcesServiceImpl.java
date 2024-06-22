@@ -19,6 +19,7 @@ import com.lps.ldtracker.model.ViewTrainingDetail;
 import com.lps.ldtracker.service.ApproverService;
 import com.lps.ldtracker.service.ManageResourcesService;
 import com.lps.ldtracker.model.CertDetail;
+import com.lps.ldtracker.model.CertPerMemberId;
 import com.lps.ldtracker.model.UserDetail;
 
 import jakarta.persistence.ParameterMode;
@@ -33,6 +34,7 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	private static final String SP_GETCERTDETAILLIST = "sp_getCertificationDetails";
 	private static final String SP_GETCERTPERCERTNAME = "sp_getCertPerCertName"; 
 	private static final String SP_GETCERTPERTEAM = "sp_getCertPerTeam";
+	private static final String SP_GETCERTPERMEMBERID = "sp_getCertPerMemberID";
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -263,5 +265,32 @@ public class ManageResourcesServiceImpl implements ManageResourcesService, RealS
 	    }
         return certDetailList;
     }
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CertPerMemberId> getCertPerMemberId(String id) {
+	    List<CertPerMemberId> resList = new ArrayList<CertPerMemberId>();
+	    Session session = getRealSession(sessionFactory);
+	    try {
+	        ProcedureCall storedProcedureCall = session.createStoredProcedureCall(SP_GETCERTPERMEMBERID);
+	        storedProcedureCall.registerStoredProcedureParameter("MemberID", String.class, ParameterMode.IN);
+	        storedProcedureCall.setParameter("MemberID", id);
+	        List<Object[]> recordList = storedProcedureCall.getResultList();
+	        recordList.forEach(result -> {
+	        	CertPerMemberId res = new CertPerMemberId();
+	            res.setCertName((String) result[0]); // Replace '0' with the appropriate index
+	            res.setCertDate((Timestamp) result[1]); // Replace '1' with the appropriate index
+	            res.setCertLink((String) result[2]); // Replace '2' with the appropriate index
+	            res.setFileContent2((String) result[3]); // Replace '3' with the appropriate index
+	            resList.add(res);
+	        });
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        if(session != null) {
+	            session.close();
+	        }
+	    }
+	    return resList;
+	}	
 
 }
