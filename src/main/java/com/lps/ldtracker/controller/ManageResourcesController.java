@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lps.ldtracker.dto.ManageResourceDto;
 import com.lps.ldtracker.model.CertDetail;
+import com.lps.ldtracker.model.CertPerMemberId;
 //import com.lps.ldtracker.model.Resource_Dtl;
 import com.lps.ldtracker.model.Result;
 import com.lps.ldtracker.model.UserDetail;
@@ -112,6 +113,16 @@ public class ManageResourcesController {
 		e.printStackTrace();
 	}
 	return new ResponseEntity<>(result, HttpStatus.OK);
-}		
+}	
+	
+	@GetMapping(value="/getCertPerMemberId/{memberId}")
+	public ResponseEntity<Result> getCertPerMemberId(@PathVariable String memberId ) {
+		List<CertPerMemberId> usr  = this.manageResourcesService.getCertPerMemberId(memberId);
+		Result result = new Result();
+		result.setData(usr);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	
+	}	
 	
 }
